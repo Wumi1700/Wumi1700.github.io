@@ -1,0 +1,3034 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>难不成他还真能拯救世界</title>
+    <style>
+        /* ================================================================
+           0. 基础重置 & 字体
+           ================================================================ */
+        @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Noto+Serif+SC:wght@300;400;600;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Cedarville+Cursive&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --parchment-dark: #1a1510;
+            --parchment-mid: #2c241c;
+            --parchment-light: #3d3228;
+            --parchment-warm: #4d3d2e;
+            --gold: #c9a96e;
+            --gold-light: #e8d5a3;
+            --gold-glow: rgba(201, 169, 110, 0.25);
+            --text-warm: #ddd6cd;
+            --text-muted: #8a7e72;
+            --border-gold: rgba(201, 169, 110, 0.3);
+            --shadow-gold: 0 0 30px rgba(201, 169, 110, 0.08);
+            --font-display: 'Cinzel', 'Georgia', serif;
+            --font-body: 'Noto Serif SC', 'Georgia', serif;
+        }
+
+        html,
+        body {
+            height: 100%;
+            font-family: var(--font-body);
+            background: var(--parchment-dark);
+            color: var(--text-warm);
+        }
+
+        /* ================================================================
+           1. 背景
+           ================================================================ */
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background:
+                radial-gradient(ellipse at center, rgba(26, 21, 16, 0.0) 50%, rgba(10, 8, 6, 0.6) 100%),
+                repeating-linear-gradient(45deg,
+                    rgba(60, 50, 40, 0.03) 0px,
+                    rgba(60, 50, 40, 0.03) 2px,
+                    transparent 2px,
+                    transparent 6px);
+            pointer-events: none;
+            z-index: 9999;
+        }
+        body::after {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background-image:
+                radial-gradient(ellipse at 20% 30%, rgba(201, 169, 110, 0.04) 0%, transparent 60%),
+                radial-gradient(ellipse at 80% 70%, rgba(201, 169, 110, 0.03) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 9998;
+        }
+
+        /* ================================================================
+           2. 布局
+           ================================================================ */
+        .app {
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* ================================================================
+           3. 右侧菜单
+           ================================================================ */
+        .sidebar {
+            width: 230px;
+            flex-shrink: 0;
+            background: linear-gradient(180deg, #1f1914 0%, #16120e 100%);
+            border-left: 2px solid var(--border-gold);
+            padding: 20px 18px 30px 18px;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            position: sticky;
+            top: 0;
+            box-shadow: -8px 0 40px rgba(0, 0, 0, 0.6);
+            position: relative;
+        }
+        .sidebar::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 40px;
+            bottom: 40px;
+            width: 2px;
+            background: linear-gradient(180deg, transparent, var(--gold), transparent);
+            opacity: 0.3;
+        }
+
+        .sidebar .logo {
+            font-family: var(--font-display);
+            font-size: 15px;
+            letter-spacing: 6px;
+            color: var(--gold);
+            border-bottom: 1px solid var(--border-gold);
+            padding-bottom: 15px;
+            margin-bottom: 15px;
+            text-shadow: 0 0 30px rgba(201, 169, 110, 0.15);
+        }
+        .sidebar .logo span {
+            display: block;
+            font-family: var(--font-body);
+            font-size: 10px;
+            color: var(--text-muted);
+            letter-spacing: 3px;
+            margin-top: 6px;
+            font-weight: 300;
+        }
+
+        .search-wrap {
+            position: relative;
+            margin-bottom: 20px;
+        }
+        .search-wrap input {
+            width: 100%;
+            padding: 8px 12px 8px 34px;
+            background: rgba(60, 50, 40, 0.2);
+            border: 1px solid var(--border-gold);
+            border-radius: 20px;
+            color: var(--text-warm);
+            font-family: var(--font-body);
+            font-size: 13px;
+            letter-spacing: 1px;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+        .search-wrap input::placeholder {
+            color: var(--text-muted);
+            opacity: 0.5;
+        }
+        .search-wrap input:focus {
+            border-color: var(--gold);
+            background: rgba(60, 50, 40, 0.4);
+            box-shadow: 0 0 20px rgba(201, 169, 110, 0.05);
+        }
+        .search-wrap .search-icon {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+            font-size: 14px;
+            opacity: 0.5;
+            pointer-events: none;
+        }
+
+        .sidebar nav {
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+            flex: 1;
+        }
+
+        .sidebar .nav-divider {
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 10px;
+            letter-spacing: 4px;
+            padding: 8px 0 12px 0;
+            opacity: 0.4;
+            font-family: var(--font-display);
+        }
+
+        .sidebar nav a {
+            display: block;
+            padding: 11px 18px;
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 14px;
+            letter-spacing: 2px;
+            border-radius: 4px;
+            transition: all 0.4s ease;
+            cursor: default;
+            font-family: var(--font-body);
+            position: relative;
+            border: 1px solid transparent;
+        }
+        .sidebar nav a:hover {
+            color: var(--gold-light);
+            background: rgba(201, 169, 110, 0.06);
+            border-color: rgba(201, 169, 110, 0.1);
+            box-shadow: inset 0 0 30px rgba(201, 169, 110, 0.04);
+        }
+        .sidebar nav a.active {
+            color: #0e0d0c;
+            background: linear-gradient(135deg, var(--gold-light), var(--gold));
+            border-color: var(--gold-light);
+            box-shadow: 0 0 30px rgba(201, 169, 110, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+            font-weight: 600;
+            text-shadow: 0 1px 2px rgba(255, 255, 255, 0.15);
+        }
+        .sidebar nav a.active::after {
+            content: '✦';
+            position: absolute;
+            right: 14px;
+            font-size: 12px;
+            color: rgba(14, 13, 12, 0.4);
+        }
+
+        /* 邮件红点 */
+        .sidebar nav a .mail-dot {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            background: #e74c3c;
+            border-radius: 50%;
+            margin-left: 6px;
+            vertical-align: middle;
+            box-shadow: 0 0 10px rgba(231, 76, 60, 0.4);
+            animation: pulse-dot 2s ease-in-out infinite;
+        }
+        @keyframes pulse-dot {
+            0%,
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+            50% {
+                opacity: 0.6;
+                transform: scale(0.85);
+            }
+        }
+        .sidebar nav a .mail-dot.hidden {
+            display: none;
+        }
+
+        .sidebar .footer-meta {
+            margin-top: auto;
+            font-size: 10px;
+            color: var(--text-muted);
+            letter-spacing: 2px;
+            border-top: 1px solid var(--border-gold);
+            padding-top: 18px;
+            text-align: center;
+            opacity: 0.5;
+            font-family: var(--font-display);
+        }
+
+        /* ================================================================
+           4. 主内容区
+           ================================================================ */
+        .main {
+            flex: 1;
+            overflow-y: auto;
+            padding: 50px 60px 60px 60px;
+            background: transparent;
+            scroll-behavior: smooth;
+            position: relative;
+        }
+
+        /* ================================================================
+           5. 滚动条
+           ================================================================ */
+        .main::-webkit-scrollbar {
+            width: 5px;
+        }
+        .main::-webkit-scrollbar-track {
+            background: rgba(26, 21, 16, 0.8);
+            border-left: 1px solid rgba(201, 169, 110, 0.08);
+        }
+        .main::-webkit-scrollbar-thumb {
+            background: linear-gradient(180deg, var(--gold-light), var(--gold));
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(201, 169, 110, 0.15);
+        }
+        .main::-webkit-scrollbar-thumb:hover {
+            background: var(--gold-light);
+            box-shadow: 0 0 30px rgba(201, 169, 110, 0.25);
+        }
+
+        /* ================================================================
+           6. 首页 故事梗概
+           ================================================================ */
+        .page-synopsis {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: calc(100vh - 120px);
+            text-align: center;
+            padding: 20px 0;
+            position: relative;
+        }
+        .page-synopsis .veil {
+            position: fixed;
+            inset: 0;
+            background: #0a0806;
+            z-index: 10000;
+            pointer-events: none;
+            animation: veilFade 2.8s ease-out forwards;
+        }
+        @keyframes veilFade {
+            0% { opacity: 1; }
+            60% { opacity: 1; }
+            100% { opacity: 0; display: none; }
+        }
+        .page-synopsis .stardust {
+            position: fixed;
+            inset: 0;
+            z-index: 9997;
+            pointer-events: none;
+            overflow: hidden;
+        }
+        .page-synopsis .stardust span {
+            position: absolute;
+            width: 3px;
+            height: 3px;
+            background: var(--gold-light);
+            border-radius: 50%;
+            box-shadow: 0 0 6px rgba(201, 169, 110, 0.4);
+            animation: floatStar linear infinite;
+            opacity: 0;
+        }
+        @keyframes floatStar {
+            0% { opacity: 0; transform: translateY(100vh) scale(0.5); }
+            10% { opacity: 0.7; }
+            90% { opacity: 0.7; }
+            100% { opacity: 0; transform: translateY(-10vh) scale(1.2); }
+        }
+        .page-synopsis .book-title {
+            font-family: var(--font-display);
+            font-size: 52px;
+            font-weight: 700;
+            color: var(--gold-light);
+            letter-spacing: 8px;
+            margin-bottom: 12px;
+            text-shadow: 0 0 60px rgba(201, 169, 110, 0.15);
+            opacity: 0;
+            animation: titleReveal 3.2s ease-out forwards;
+            animation-delay: 1.2s;
+        }
+        @keyframes titleReveal {
+            0% { opacity: 0; text-shadow: 0 0 0 rgba(201, 169, 110, 0); letter-spacing: 20px; }
+            30% { opacity: 1; text-shadow: 0 0 40px rgba(201, 169, 110, 0.3); letter-spacing: 8px; }
+            60% { text-shadow: 0 0 80px rgba(201, 169, 110, 0.15); }
+            100% { opacity: 1; text-shadow: 0 0 60px rgba(201, 169, 110, 0.08); letter-spacing: 8px; }
+        }
+        .page-synopsis .book-sub {
+            font-family: var(--font-display);
+            font-size: 18px;
+            color: var(--gold);
+            letter-spacing: 8px;
+            margin-bottom: 40px;
+            font-weight: 300;
+            opacity: 0;
+            animation: fadeUp 2s ease-out forwards;
+            animation-delay: 2.6s;
+        }
+        .page-synopsis .book-divider {
+            width: 80px;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--gold), transparent);
+            margin: 0 auto 40px auto;
+            opacity: 0;
+            animation: fadeUp 1.8s ease-out forwards;
+            animation-delay: 2.8s;
+            position: relative;
+        }
+        .page-synopsis .book-divider::before {
+            content: '✦';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: var(--gold);
+            font-size: 14px;
+            background: var(--parchment-dark);
+            padding: 0 16px;
+        }
+        .page-synopsis .synopsis-text {
+            max-width: 680px;
+            font-size: 18px;
+            line-height: 2;
+            color: var(--text-warm);
+            letter-spacing: 1px;
+            opacity: 0;
+            animation: fadeUp 2s ease-out forwards;
+            animation-delay: 3.2s;
+        }
+        .page-synopsis .synopsis-text strong {
+            color: var(--gold-light);
+            font-weight: 600;
+        }
+        @keyframes fadeUp {
+            0% { opacity: 0; transform: translateY(20px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ================================================================
+           7. 通用列表
+           ================================================================ */
+        .list-page {
+            padding: 20px 0 40px 0;
+        }
+        .list-page .page-title {
+            font-family: var(--font-display);
+            font-size: 28px;
+            font-weight: 400;
+            letter-spacing: 6px;
+            color: var(--gold-light);
+            border-bottom: 1px solid var(--border-gold);
+            padding-bottom: 16px;
+            margin-bottom: 32px;
+            text-shadow: 0 0 30px rgba(201, 169, 110, 0.06);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .list-page .page-title small {
+            font-family: var(--font-body);
+            font-size: 13px;
+            color: var(--text-muted);
+            letter-spacing: 2px;
+            font-weight: 300;
+        }
+        .list-page .page-title::before {
+            content: '✦';
+            color: var(--gold);
+            font-size: 16px;
+            margin-right: 14px;
+            opacity: 0.5;
+        }
+
+        .item-list {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        .item-list .item-btn {
+            display: block;
+            width: 100%;
+            text-align: left;
+            padding: 16px 24px;
+            background: rgba(60, 50, 40, 0.15);
+            border: 1px solid rgba(201, 169, 110, 0.08);
+            border-radius: 6px;
+            color: var(--text-warm);
+            font-size: 16px;
+            font-family: var(--font-body);
+            cursor: default;
+            transition: all 0.35s ease;
+            letter-spacing: 2px;
+            position: relative;
+        }
+        .item-list .item-btn::before {
+            content: '✦';
+            color: var(--gold);
+            font-size: 11px;
+            margin-right: 14px;
+            opacity: 0.3;
+            transition: all 0.35s ease;
+        }
+        .item-list .item-btn:hover {
+            background: rgba(201, 169, 110, 0.06);
+            border-color: rgba(201, 169, 110, 0.2);
+            color: var(--gold-light);
+            box-shadow: inset 0 0 40px rgba(201, 169, 110, 0.03);
+            transform: translateX(4px);
+        }
+        .item-list .item-btn:hover::before {
+            opacity: 0.8;
+            transform: scale(1.2);
+        }
+        .item-list .item-btn .badge {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-left: 12px;
+            font-weight: 300;
+            letter-spacing: 1px;
+        }
+
+        /* 板块列表特殊样式 */
+        .world-list {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 16px;
+        }
+        .world-list .world-btn {
+            font-family: var(--font-display);
+            font-size: 18px;
+            letter-spacing: 3px;
+            padding: 24px 20px;
+            background: linear-gradient(165deg, rgba(50, 40, 32, 0.5), rgba(30, 25, 20, 0.7));
+            border: 1px solid rgba(201, 169, 110, 0.2);
+            border-radius: 12px;
+            color: var(--text-warm);
+            cursor: default;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+            text-align: left;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(201, 169, 110, 0.05);
+            backdrop-filter: blur(2px);
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+        .world-list .world-btn::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 12px;
+            background:
+                repeating-linear-gradient(45deg,
+                    rgba(201, 169, 110, 0.015) 0px,
+                    rgba(201, 169, 110, 0.015) 2px,
+                    transparent 2px,
+                    transparent 6px);
+            pointer-events: none;
+        }
+        .world-list .world-btn::after {
+            content: '';
+            position: absolute;
+            inset: -1px;
+            border-radius: 12px;
+            padding: 1px;
+            background: linear-gradient(135deg, rgba(201, 169, 110, 0.3), transparent 50%, rgba(201, 169, 110, 0.1));
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            pointer-events: none;
+        }
+        .world-list .world-btn .btn-icon {
+            font-size: 28px;
+            flex-shrink: 0;
+            width: 44px;
+            height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(201, 169, 110, 0.06);
+            border-radius: 50%;
+            border: 1px solid rgba(201, 169, 110, 0.08);
+            transition: all 0.4s ease;
+        }
+        .world-list .world-btn .btn-info {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            flex: 1;
+        }
+        .world-list .world-btn .btn-name {
+            font-size: 17px;
+            letter-spacing: 3px;
+            color: var(--gold-light);
+            font-weight: 600;
+        }
+        .world-list .world-btn .btn-badge {
+            font-size: 11px;
+            color: var(--text-muted);
+            letter-spacing: 1px;
+            font-family: var(--font-body);
+            background: rgba(201, 169, 110, 0.06);
+            padding: 1px 12px;
+            border-radius: 20px;
+            border: 1px solid rgba(201, 169, 110, 0.06);
+            display: inline-block;
+            width: fit-content;
+        }
+        .world-list .world-btn .btn-count {
+            font-size: 13px;
+            color: var(--text-muted);
+            font-family: var(--font-body);
+            letter-spacing: 1px;
+            opacity: 0.6;
+            margin-left: auto;
+            flex-shrink: 0;
+        }
+        .world-list .world-btn:hover {
+            transform: translateY(-3px);
+            border-color: rgba(201, 169, 110, 0.35);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3), 0 0 40px rgba(201, 169, 110, 0.03), inset 0 1px 0 rgba(201, 169, 110, 0.08);
+            background: linear-gradient(165deg, rgba(60, 50, 40, 0.6), rgba(40, 35, 30, 0.7));
+        }
+        .world-list .world-btn:hover .btn-icon {
+            background: rgba(201, 169, 110, 0.12);
+            border-color: rgba(201, 169, 110, 0.2);
+            transform: scale(1.05);
+        }
+        @media (max-width: 600px) {
+            .world-list {
+                grid-template-columns: 1fr;
+            }
+            .world-list .world-btn {
+                padding: 18px 16px;
+                font-size: 16px;
+            }
+            .world-list .world-btn .btn-icon {
+                font-size: 22px;
+                width: 36px;
+                height: 36px;
+            }
+            .world-list .world-btn .btn-name {
+                font-size: 15px;
+            }
+        }
+
+        /* ================================================================
+           8. 地图页
+           ================================================================ */
+        .map-page {
+            padding: 20px 0 40px 0;
+        }
+        .map-page .map-title {
+            font-family: var(--font-display);
+            font-size: 28px;
+            font-weight: 400;
+            letter-spacing: 6px;
+            color: var(--gold-light);
+            border-bottom: 1px solid var(--border-gold);
+            padding-bottom: 16px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            text-shadow: 0 0 30px rgba(201, 169, 110, 0.06);
+        }
+        .map-page .map-title small {
+            font-family: var(--font-body);
+            font-size: 13px;
+            color: var(--text-muted);
+            letter-spacing: 2px;
+            font-weight: 300;
+        }
+        .map-container {
+            position: relative;
+            background: linear-gradient(145deg, #1f1914, #16120e);
+            border-radius: 12px;
+            padding: 20px;
+            border: 1px solid var(--border-gold);
+            box-shadow: var(--shadow-gold), inset 0 0 60px rgba(0, 0, 0, 0.3);
+            display: inline-block;
+            width: 100%;
+        }
+        .map-container img {
+            display: block;
+            width: 100%;
+            height: auto;
+            border-radius: 8px;
+            filter: sepia(0.15) saturate(0.9);
+        }
+        .map-marker {
+            position: absolute;
+            cursor: default;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            transition: all 0.35s ease;
+            z-index: 2;
+            pointer-events: auto;
+        }
+        .map-marker .dot {
+            width: 16px;
+            height: 16px;
+            background: var(--gold);
+            border-radius: 50%;
+            border: 2px solid #0e0d0c;
+            box-shadow: 0 0 20px rgba(201, 169, 110, 0.25);
+            margin: 0 auto 4px auto;
+            transition: all 0.35s ease;
+        }
+        .map-marker .label {
+            color: var(--text-warm);
+            font-size: 13px;
+            letter-spacing: 1px;
+            font-family: var(--font-display);
+            text-shadow: 0 0 20px rgba(0, 0, 0, 0.9);
+            background: rgba(14, 13, 12, 0.7);
+            padding: 2px 12px;
+            border-radius: 12px;
+            white-space: nowrap;
+            backdrop-filter: blur(4px);
+            border: 1px solid rgba(201, 169, 110, 0.08);
+            transition: all 0.35s ease;
+        }
+        .map-marker:hover .dot {
+            transform: scale(1.5);
+            background: var(--gold-light);
+            box-shadow: 0 0 40px rgba(201, 169, 110, 0.4);
+        }
+        .map-marker:hover .label {
+            color: var(--gold-light);
+            background: rgba(201, 169, 110, 0.12);
+            border-color: rgba(201, 169, 110, 0.2);
+        }
+        .map-hint {
+            margin-top: 14px;
+            font-size: 13px;
+            color: var(--text-muted);
+            letter-spacing: 2px;
+            text-align: center;
+            font-family: var(--font-display);
+        }
+
+        /* ================================================================
+           9. 详情页
+           ================================================================ */
+        .detail-page {
+            padding: 20px 0 40px 0;
+        }
+        .detail-page .back-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 28px;
+            color: var(--text-muted);
+            font-size: 13px;
+            letter-spacing: 3px;
+            cursor: default;
+            transition: all 0.4s ease;
+            font-family: var(--font-display);
+            background: transparent;
+            border: 1px solid rgba(201, 169, 110, 0.08);
+            padding: 8px 20px 8px 18px;
+            border-radius: 30px;
+            background: rgba(26, 21, 16, 0.6);
+            backdrop-filter: blur(4px);
+        }
+        .detail-page .back-btn::before {
+            content: '❧';
+            font-size: 16px;
+            color: var(--gold);
+            opacity: 0.5;
+            transition: all 0.4s ease;
+        }
+        .detail-page .back-btn:hover {
+            color: var(--gold-light);
+            border-color: rgba(201, 169, 110, 0.25);
+            box-shadow: 0 0 30px rgba(201, 169, 110, 0.06);
+            transform: translateX(-4px);
+        }
+        .detail-page .back-btn:hover::before {
+            opacity: 1;
+            transform: rotate(-10deg);
+        }
+        .detail-page .detail-card {
+            background: linear-gradient(160deg, rgba(50, 40, 32, 0.6), rgba(30, 25, 20, 0.8));
+            border-left: 3px solid var(--gold);
+            padding: 32px 36px;
+            border-radius: 12px;
+            box-shadow: var(--shadow-gold), inset 0 1px 0 rgba(201, 169, 110, 0.05), 0 8px 40px rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(2px);
+            border: 1px solid rgba(201, 169, 110, 0.06);
+            position: relative;
+        }
+        .detail-page .detail-card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 12px;
+            background: repeating-linear-gradient(45deg,
+                    rgba(201, 169, 110, 0.01) 0px,
+                    rgba(201, 169, 110, 0.01) 2px,
+                    transparent 2px,
+                    transparent 6px);
+            pointer-events: none;
+        }
+        .detail-page .detail-card .portrait-wrap {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 22px;
+        }
+        .detail-page .detail-card .portrait-placeholder {
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            background: radial-gradient(circle at 30% 30%, #3d3228, #1f1914);
+            border: 2px solid var(--gold);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 13px;
+            color: var(--text-muted);
+            letter-spacing: 1px;
+            text-align: center;
+            line-height: 1.6;
+            box-shadow: 0 0 40px rgba(201, 169, 110, 0.06);
+        }
+        .detail-page .detail-card h2 {
+            font-family: var(--font-display);
+            font-size: 26px;
+            font-weight: 600;
+            color: var(--gold-light);
+            letter-spacing: 4px;
+            margin-bottom: 4px;
+            text-align: center;
+            text-shadow: 0 0 30px rgba(201, 169, 110, 0.06);
+        }
+        .detail-page .detail-card .meta {
+            font-size: 14px;
+            color: var(--text-muted);
+            letter-spacing: 2px;
+            margin-bottom: 18px;
+            text-align: center;
+            font-family: var(--font-display);
+        }
+        .detail-page .detail-card .meta strong {
+            color: var(--gold);
+            font-weight: 400;
+        }
+        .detail-page .detail-card p {
+            font-size: 16px;
+            line-height: 2;
+            color: var(--text-warm);
+            letter-spacing: 0.5px;
+            margin-bottom: 16px;
+        }
+        .detail-page .detail-card p strong {
+            color: var(--gold-light);
+            font-weight: 600;
+        }
+        .detail-page .detail-card .story-block {
+            background: rgba(14, 13, 12, 0.4);
+            padding: 20px 24px;
+            border-radius: 8px;
+            border-left: 2px solid var(--gold);
+            margin-top: 10px;
+            backdrop-filter: blur(2px);
+        }
+        .detail-page .detail-card .story-block h4 {
+            font-family: var(--font-display);
+            color: var(--gold);
+            font-size: 14px;
+            letter-spacing: 3px;
+            margin-bottom: 8px;
+            font-weight: 400;
+        }
+        .detail-page .detail-card .story-block p {
+            margin-bottom: 0;
+            font-size: 15px;
+            color: var(--text-warm);
+        }
+
+        /* ================================================================
+           10. 事件列表
+           ================================================================ */
+        .timeline {
+            list-style: none;
+            padding: 0;
+            position: relative;
+        }
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 12px;
+            top: 10px;
+            bottom: 10px;
+            width: 1px;
+            background: linear-gradient(180deg, var(--gold), transparent);
+            opacity: 0.2;
+        }
+        .timeline li {
+            background: rgba(60, 50, 40, 0.12);
+            padding: 16px 20px 16px 48px;
+            margin-bottom: 12px;
+            border-radius: 6px;
+            border-left: 2px solid var(--gold);
+            transition: all 0.35s ease;
+            position: relative;
+            cursor: default;
+            backdrop-filter: blur(2px);
+        }
+        .timeline li::before {
+            content: '✦';
+            position: absolute;
+            left: -1px;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            color: var(--gold);
+            font-size: 11px;
+            opacity: 0.4;
+            background: var(--parchment-dark);
+            padding: 0 4px;
+            transition: all 0.35s ease;
+        }
+        .timeline li:hover {
+            background: rgba(201, 169, 110, 0.04);
+            border-color: var(--gold-light);
+            box-shadow: inset 0 0 40px rgba(201, 169, 110, 0.02);
+            transform: translateX(4px);
+        }
+        .timeline li:hover::before {
+            opacity: 1;
+            transform: translate(-50%, -50%) scale(1.3);
+        }
+        .timeline strong {
+            font-family: var(--font-display);
+            color: var(--gold);
+            margin-right: 12px;
+            font-weight: 400;
+            letter-spacing: 1px;
+            font-size: 14px;
+        }
+        .timeline .click-hint {
+            font-size: 11px;
+            color: var(--text-muted);
+            margin-left: 10px;
+            font-family: var(--font-display);
+            letter-spacing: 1px;
+            opacity: 0.4;
+        }
+
+        /* ================================================================
+           11. 名词解释（复用列表样式）
+           ================================================================ */
+        /* 复用 .item-list 和 .world-list */
+
+        /* ================================================================
+           12. 搜索结果显示
+           ================================================================ */
+        .search-result .result-item {
+            padding: 8px 0 8px 28px;
+            color: var(--text-warm);
+            border-bottom: 1px solid rgba(201, 169, 110, 0.05);
+            cursor: default;
+            transition: all 0.3s ease;
+        }
+        .search-result .result-item:hover {
+            color: var(--gold-light);
+            padding-left: 34px;
+            background: rgba(201, 169, 110, 0.03);
+        }
+        .search-result .result-item .type-tag {
+            display: inline-block;
+            font-size: 11px;
+            color: var(--text-muted);
+            background: rgba(60, 50, 40, 0.3);
+            padding: 0 10px;
+            border-radius: 12px;
+            margin-right: 10px;
+            letter-spacing: 1px;
+            font-family: var(--font-display);
+        }
+        .search-result .result-item .world-tag {
+            display: inline-block;
+            font-size: 10px;
+            color: var(--gold);
+            opacity: 0.6;
+            margin-left: 10px;
+            letter-spacing: 1px;
+        }
+        .search-result .result-item .matched-text {
+            color: var(--gold-light);
+            font-weight: 600;
+        }
+
+        /* ================================================================
+           13. 音乐控制按钮
+           ================================================================ */
+        .music-control {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            z-index: 99999;
+            background: rgba(26, 21, 16, 0.85);
+            border: 1px solid rgba(201, 169, 110, 0.3);
+            border-radius: 50%;
+            width: 48px;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: default;
+            color: var(--gold);
+            font-size: 20px;
+            transition: all 0.4s ease;
+            backdrop-filter: blur(8px);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+            user-select: none;
+        }
+        .music-control:hover {
+            border-color: var(--gold);
+            box-shadow: 0 4px 40px rgba(201, 169, 110, 0.15);
+            transform: scale(1.05);
+        }
+        @media (max-width: 768px) {
+            .music-control {
+                width: 40px;
+                height: 40px;
+                font-size: 16px;
+                bottom: 16px;
+                right: 16px;
+            }
+        }
+
+        /* ================================================================
+           生日贺卡 —— 羊皮纸 + 花体边框 + 呼吸光晕
+           ================================================================ */
+
+        /* 引入手写字体 */
+        @import url('https://fonts.googleapis.com/css2?family=Cedarville+Cursive&display=swap');
+
+        /* 遮罩 */
+        .birthday-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 99999;
+            background: rgba(10, 8, 6, 0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(6px);
+            animation: bd-fadeIn 0.6s ease-out;
+        }
+
+        /* 信纸容器（折叠状态） */
+        .birthday-card {
+            background: linear-gradient(160deg, #d9c8a9, #c4b08a, #b8a280);
+            border-radius: 8px;
+            padding: 4px;
+            max-width: 520px;
+            width: 92%;
+            box-shadow:
+                0 0 80px rgba(201, 169, 110, 0.15),
+                0 20px 60px rgba(0, 0, 0, 0.7),
+                inset 0 0 40px rgba(201, 169, 110, 0.05);
+            position: relative;
+            transform: scaleY(0.05) translateY(30px);
+            transform-origin: bottom center;
+            opacity: 0;
+            animation: bd-unfold 0.9s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+            animation-delay: 0.3s;
+        }
+
+        /* 信纸主体（羊皮纸纹理） */
+        .birthday-card .card-inner {
+            background:
+                radial-gradient(ellipse at 30% 20%, rgba(235, 220, 195, 0.2) 0%, transparent 60%),
+                radial-gradient(ellipse at 70% 80%, rgba(200, 180, 150, 0.15) 0%, transparent 50%),
+                linear-gradient(160deg, #d9c8a9, #c4b08a);
+            border-radius: 6px;
+            padding: 40px 44px 36px 44px;
+            position: relative;
+            overflow: hidden;
+            border: 2px solid rgba(180, 160, 130, 0.3);
+        }
+
+        /* 羊皮纸纹理（细纹） */
+        .birthday-card .card-inner::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 6px;
+            background:
+                repeating-linear-gradient(90deg,
+                    rgba(160, 140, 110, 0.03) 0px,
+                    rgba(160, 140, 110, 0.03) 1px,
+                    transparent 1px,
+                    transparent 4px),
+                repeating-linear-gradient(45deg,
+                    rgba(160, 140, 110, 0.02) 0px,
+                    rgba(160, 140, 110, 0.02) 2px,
+                    transparent 2px,
+                    transparent 6px);
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        /* 花体装饰边框（伪元素） */
+        .birthday-card .card-inner::after {
+            content: '';
+            position: absolute;
+            inset: 12px;
+            border: 1.5px solid rgba(180, 150, 110, 0.25);
+            border-radius: 4px;
+            pointer-events: none;
+            z-index: 2;
+        }
+
+        /* 四角花体装饰 */
+        .birthday-card .corner {
+            position: absolute;
+            z-index: 3;
+            font-family: 'Georgia', serif;
+            color: rgba(180, 150, 110, 0.3);
+            font-size: 18px;
+            pointer-events: none;
+        }
+        .birthday-card .corner-tl { top: 18px; left: 22px; }
+        .birthday-card .corner-tr { top: 18px; right: 22px; transform: scaleX(-1); }
+        .birthday-card .corner-bl { bottom: 18px; left: 22px; transform: scaleY(-1); }
+        .birthday-card .corner-br { bottom: 18px; right: 22px; transform: scale(-1, -1); }
+
+        /* 信纸内容 */
+        .birthday-card .card-content {
+            position: relative;
+            z-index: 3;
+            text-align: center;
+        }
+
+        /* 顶部装饰线 */
+        .birthday-card .card-header {
+            font-family: var(--font-display, Georgia);
+            color: #8a7a64;
+            letter-spacing: 6px;
+            font-size: 12px;
+            border-bottom: 1px solid rgba(180, 150, 110, 0.2);
+            padding-bottom: 14px;
+            margin-bottom: 18px;
+            font-weight: 400;
+        }
+
+        /* 角色名（手写体） */ 
+        .birthday-card .card-name {
+            font-family: 'Cedarville Cursive', 'Brush Script MT', 'Bradley Hand', 'Georgia', cursive;
+            font-size: 34px;
+            color: #7a6548;
+            letter-spacing: 2px;
+            margin-bottom: 6px;
+            text-shadow: 0 1px 2px rgba(180, 150, 110, 0.15);
+        }
+
+        /* 角色名旁的小图标 */
+        .birthday-card .card-name .name-icon {
+            font-size: 28px;
+            margin-left: 8px;
+            display: inline-block;
+        }
+
+        /* 正文 */
+        .birthday-card .card-message {
+            font-family: var(--font-body, 'Noto Serif SC', Georgia);
+            font-size: 16px;
+            line-height: 2;
+            color: #4a3f35;
+            white-space: pre-wrap;
+            margin-bottom: 14px;
+            padding: 0 4px;
+        }
+
+        /* 签名（手写体） */
+        .birthday-card .card-signature {
+            font-family: 'Cedarville Cursive', 'Brush Script MT', 'Bradley Hand', 'Georgia', cursive;
+            font-size: 20px;
+            color: #7a6548;
+            text-align: right;
+            letter-spacing: 1px;
+            margin-top: 6px;
+            border-top: 1px solid rgba(180, 150, 110, 0.15);
+            padding-top: 14px;
+        }
+        .birthday-card .card-signature .sig-icon {
+            font-size: 18px;
+            margin-right: 6px;
+        }
+
+        /* 关闭按钮 */
+        .birthday-card .card-close-btn {
+            background: transparent;
+            border: 1px solid rgba(180, 150, 110, 0.25);
+            color: #8a7a64;
+            padding: 8px 28px;
+            border-radius: 30px;
+            font-family: var(--font-display, Georgia);
+            font-size: 13px;
+            letter-spacing: 3px;
+            cursor: default;
+            transition: all 0.4s ease;
+            margin-top: 8px;
+        }
+        .birthday-card .card-close-btn:hover {
+            border-color: rgba(180, 150, 110, 0.5);
+            background: rgba(180, 150, 110, 0.08);
+            color: #5a4f3f;
+            transform: scale(1.02);
+        }
+
+        /* 呼吸光晕 + 浮动 */
+        .birthday-card {
+            animation: bd-unfold 0.9s cubic-bezier(0.34, 1.56, 0.64, 1) forwards, bd-float 3s ease-in-out 1.5s infinite;
+            animation-delay: 0.3s, 1.2s;
+        }
+        .birthday-card .card-inner {
+            animation: bd-glow 3s ease-in-out 1.5s infinite;
+        }
+
+        @keyframes bd-fadeIn {
+            0% { opacity: 0; }
+            100% { opacity: 1; }
+        }
+
+        /* 从下往上展开 */
+        @keyframes bd-unfold {
+            0% {
+                transform: scaleY(0.05) translateY(30px);
+                opacity: 0;
+            }
+            100% {
+                transform: scaleY(1) translateY(0);
+                opacity: 1;
+            }
+        }
+
+        /* 合拢动画（关闭时触发） */
+        @keyframes bd-fold {
+            0% {
+                transform: scaleY(1) translateY(0);
+                opacity: 1;
+            }
+            100% {
+                transform: scaleY(0.05) translateY(30px);
+                opacity: 0;
+            }
+        }
+
+        .birthday-card.folding {
+            animation: bd-fold 0.6s cubic-bezier(0.5, 0, 0.5, 1) forwards !important;
+        }
+
+        /* 浮动 */
+        @keyframes bd-float {
+            0% { transform: scaleY(1) translateY(0); }
+            50% { transform: scaleY(1) translateY(-6px); }
+            100% { transform: scaleY(1) translateY(0); }
+        }
+
+        /* 呼吸光晕 */
+        @keyframes bd-glow {
+            0% { box-shadow: 0 0 30px rgba(201, 169, 110, 0.05), inset 0 0 30px rgba(201, 169, 110, 0.02); }
+            50% { box-shadow: 0 0 50px rgba(201, 169, 110, 0.15), inset 0 0 50px rgba(201, 169, 110, 0.05); }
+            100% { box-shadow: 0 0 30px rgba(201, 169, 110, 0.05), inset 0 0 30px rgba(201, 169, 110, 0.02); }
+        }
+
+        /* 合拢后消失 */
+        .birthday-overlay.closing {
+            animation: bd-fadeOut 0.6s ease-out forwards;
+        }
+        @keyframes bd-fadeOut {
+            0% { opacity: 1; }
+            100% { opacity: 0; }
+        }
+
+        /* ===== 响应式 ===== */
+        @media (max-width: 500px) {
+            .birthday-card .card-inner {
+                padding: 28px 20px 24px 20px;
+            }
+            .birthday-card .card-name {
+                font-size: 26px;
+            }
+            .birthday-card .card-message {
+                font-size: 14px;
+                line-height: 1.9;
+            }
+            .birthday-card .card-signature {
+                font-size: 17px;
+            }
+            .birthday-card .corner {
+                font-size: 14px;
+            }
+            .birthday-card .corner-tl { top: 12px; left: 14px; }
+            .birthday-card .corner-tr { top: 12px; right: 14px; }
+            .birthday-card .corner-bl { bottom: 12px; left: 14px; }
+            .birthday-card .corner-br { bottom: 12px; right: 14px; }
+        }
+
+        /* ================================================================
+           14. 响应式
+           ================================================================ */
+        @media (max-width: 768px) {
+            .app {
+                flex-direction: column-reverse;
+                height: auto;
+                overflow: visible;
+            }
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: static;
+                flex-direction: row;
+                flex-wrap: wrap;
+                padding: 12px 14px;
+                border-left: none;
+                border-top: 2px solid var(--border-gold);
+                gap: 4px;
+                justify-content: center;
+                box-shadow: 0 -8px 40px rgba(0, 0, 0, 0.4);
+            }
+            .sidebar::before { display: none; }
+            .sidebar .logo { display: none; }
+            .sidebar .search-wrap { width: 100%; order: -1; margin-bottom: 10px; }
+            .sidebar nav { flex-direction: row; flex-wrap: wrap; justify-content: center; gap: 4px; flex: none; }
+            .sidebar nav a { padding: 6px 14px; font-size: 12px; letter-spacing: 1px; }
+            .sidebar nav a.active::after { display: none; }
+            .sidebar .footer-meta { display: none; }
+            .sidebar .nav-divider { display: none; }
+
+            .main {
+                padding: 30px 20px 40px 20px;
+                overflow-y: visible;
+                height: auto;
+                min-height: 100vh;
+            }
+            .page-synopsis { min-height: auto; padding: 40px 0; }
+            .page-synopsis .book-title { font-size: 28px; letter-spacing: 4px; }
+            .page-synopsis .book-sub { font-size: 14px; letter-spacing: 4px; }
+            .page-synopsis .synopsis-text { font-size: 15px; line-height: 1.9; }
+
+            .detail-page .detail-card { padding: 20px 18px; }
+            .detail-page .detail-card h2 { font-size: 20px; }
+            .detail-page .detail-card .portrait-placeholder { width: 130px; height: 130px; }
+
+            .list-page .page-title { font-size: 22px; letter-spacing: 3px; flex-wrap: wrap; gap: 8px; }
+            .list-page .page-title::before { content: ''; display: none; }
+            .map-container { padding: 10px; }
+            .map-marker .label { font-size: 11px; padding: 1px 8px; }
+            .map-marker .dot { width: 12px; height: 12px; }
+        }
+        @media (max-width: 480px) {
+            .main { padding: 20px 14px 30px 14px; }
+            .page-synopsis .book-title { font-size: 22px; letter-spacing: 2px; }
+            .item-list .item-btn { font-size: 14px; padding: 12px 16px; }
+            .detail-page .detail-card .portrait-placeholder { width: 100px; height: 100px; }
+            .detail-page .back-btn { font-size: 11px; padding: 6px 14px 6px 12px; letter-spacing: 2px; }
+            .timeline li { padding: 14px 16px 14px 40px; font-size: 14px; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="app">
+
+    <!-- ===== 右侧菜单 ===== -->
+    <aside class="sidebar">
+        <div class="logo">
+            📜 我的小说
+            <span>— 异世·穿越 —</span>
+        </div>
+
+        <!-- 搜索框 -->
+        <div class="search-wrap">
+            <span class="search-icon">🔍</span>
+            <input type="text" id="searchInput" placeholder="搜索人物、词条、航线..." />
+        </div>
+
+        <nav id="menuNav">
+            <a href="#" data-view="synopsis" class="active">📚 故事梗概</a>
+            <div class="nav-divider">═══ ✦ ═══</div>
+            <a href="#" data-view="characters">👤 人物介绍</a>
+            <a href="#" data-view="routes">🗺️ 航线地图</a>
+            <a href="#" data-view="events">⚡ 历史大事件</a>
+            <div class="nav-divider">═══ ✦ ═══</div>
+            <a href="#" data-view="glossary">📖 名词解释</a>
+            <a href="#" data-view="mailbox">📬 角色信箱 <span class="mail-dot hidden" id="mailDot"></span></a>
+        </nav>
+
+        <div class="footer-meta">✦ 持续更新 · 作者原创 ✦</div>
+    </aside>
+
+    <!-- ===== 主内容 ===== -->
+    <main class="main" id="mainContent">
+        <!-- 由 JavaScript 动态渲染 -->
+    </main>
+
+</div>
+
+<script>
+    // ================================================================
+    // 📦 数据 —— 按板块分组
+    // ================================================================
+
+    const DATA = {
+        synopsis: {
+            title: '难不成他还真能拯救世界',
+            subtitle: '少年穿越 · 拯救世界',
+            text: '少年 <strong>布兰森·丹尼尔</strong> 意外穿越到异世界，发现这个名为「基塔」的世界正面临毁灭危机。他必须联合各路伙伴，在混乱的时空中找到拯救世界的唯一方法。一场关于勇气、友情与牺牲的冒险就此展开……'
+        },
+
+        // ---- 人物按板块分组 ----
+        characters: {
+            '拯救世界': [
+                {
+                    id: 'daniel',
+                    name: '布兰森·丹尼尔',
+                    meta: '男 · 18岁 · 迪雅人（普通人类）',
+                    img: 'images/人物头像/布兰森.jpg',
+                    desc: `
+                        <p><strong>人际关系：</strong></p>
+                        <p>父亲：杰弗瑞·汤姆  母亲：蕾丽莎·丹尼尔</p>
+
+                        <p><strong>人物生平：</strong></p>
+                        <p>2008年10月2日出生于美国。</p>
+                        <p>五岁父亲无故消失，父母离婚。</p>
+                        <p>十岁靠帮别人家擦玻璃挣得第一桶金，给妈妈买了一条围巾，然后因为擦玻璃感冒在医院住了一周。</p>
+                        <p>十三岁靠帮别人写作业挣钱，给自己买书。</p>
+                        <p>十四岁认识<em>哈德</em>。</p>
+                        <p>十五岁第一次出远门，是因为妈妈在外地打工受伤了要去照顾她，在医院认识了一个年龄相仿的女孩，二人喜欢同一本书，后来一直有联系。</p>
+                        <p>十六岁上高中，进入了"诗与火"社团，以为是个读书社，没想到是个卡牌游戏社。</p>
+                        <p>十七岁通过<em>门</em>进入<em>417号航线</em>。</p>
+
+                        <p><strong>饮食：</strong></p>
+                        <p>喜欢吃蔬菜，喜欢吃果脯类酸甜口的食物。</p>
+                        <p>不喜欢吃甜的、油腻的食物。</p>
+
+                        <p><strong>喜好：</strong></p>
+                        <p>书和电影，尤其是奇幻类型（例如《指环王》系列）。</p>
+                        <p>因为此类书看多了，所以生出了一股中二之心，但由于胆子小，中二之心迟迟不能了却。</p>
+                        <p>喜欢狗，尤其是大型犬。</p>
+                        <p>喜欢橙色，因为像阳光。</p>
+                        <p>幸运数字二，因为总是第二个。</p>
+                        <p>喜欢午后躺在草地上看书，阳光还有微风，这样就可以光明正大的睡觉了。</p>
+                        <p>喜欢挣钱。</p>
+
+                        <p><strong>不喜欢：</strong></p>
+                        <p>不喜欢一个人在陌生的地方呆着，也不喜欢一个人在人多的地方呆着，因为会很孤独。</p>
+                        <p>不喜欢被人强迫，显得被动。</p>
+                        <p>不喜欢消极的人，因为会影响自己。</p>
+                        <p>不喜欢爱情小说，觉得很假。</p>
+                    `
+                },
+                {
+                    id: 'ailans',
+                    name: '艾尔兰斯',
+                    meta: '男 · 18岁 · 精灵',
+                    img: 'images/人物头像/艾尔兰斯.png',
+                    desc: `
+                        <p><strong>人际关系：</strong></p>
+                        <p>父亲：格林  母亲：莎莉</p>
+
+                        <p><strong>人物生平：</strong></p>
+                        <p>2007年4月1日出生于<em>绿林</em>。</p>
+                        <p>八岁时<em>异人族</em>入侵，被法师藏在花园里，度过了饿了只能吃雪的十五天，从此变得格外珍惜食物。</p>
+                        <p>八岁时，母亲<em>莎莉</em>死于异人族手下，从此变得沉默。</p>
+                        <p>九岁至十二岁，绿林修复期间，被带去<em>白地</em>生活，喜欢上了弓箭，但自己的瞄准技术并不好。</p>
+                        <p>十三岁，初次学习父亲"面无表情"的法术，最终以饿了法术失效为结尾。</p>
+                        <p>十八岁，认识布兰森。</p>
+
+                        <p><strong>饮食：</strong></p>
+                        <p>什么都能吃，除了个别恶心的东西。</p>
+                        <p>草也能吃。</p>
+
+                        <p><strong>喜好：</strong></p>
+                        <p>甜食，因为容易吃饱。</p>
+                        <p>喜欢发呆，发呆的时候能够体验到飞到天空上的感觉。</p>
+                        <p>想当法师，因为法师小时候让他飞上了天空。</p>
+                    `
+                },
+                {
+                    id: 'floyd',
+                    name: '弗洛伊德·汤姆',
+                    meta: '男 · 37岁 · 勇士',
+                    img: 'images/人物头像/弗洛伊德.jpg',
+                    desc: `
+                        <p><strong>人际关系：</strong></p>
+                        <p>前妻：蕾丽莎·丹尼尔</p>
+                        <p>儿子：<em>布兰森·丹尼尔</em></p>
+
+                        <p><strong>人物生平：</strong></p>
+                        <p>曾是凯尔家族的护卫队长，五年前无故失踪……</p>
+
+                        <p><strong>性格特点：</strong></p>
+                        <p>沉默寡言，但忠诚可靠。擅长剑术和野外生存。</p>
+
+                        <p><strong>喜好：</strong></p>
+                        <p>喜欢在月下独处，喜欢喝烈酒。不喜欢谈及自己的过去。</p>
+                    `
+                },
+                {
+                    id: 'monica',
+                    name: '红叶',
+                    meta: '女 · 23岁 · 智力超群的少女',
+                    img: 'images/人物头像/红叶.jpg',
+                    desc: `
+                        <p><strong>人际关系：</strong></p>
+                        <p>父亲：xxx  母亲：xxx</p>
+
+                        <p><strong>人物生平：</strong></p>
+                        <p>第一段内容……</p>
+                        <p>第二段内容，其中有个关键词叫<em>斜体跳转词</em>。</p>
+
+                        <p><strong>性格特点：</strong></p>
+                        <p>性格描述……</p>
+
+                        <p><strong>喜好：</strong></p>
+                        <p>喜欢xxx，不喜欢xxx。</p>
+                    `
+                },
+                {
+                    id: 'lindrick',
+                    name: '林德里克·罗斯福',
+                    meta: '男 · 未知 · 狡猾的狐狸',
+                    img: 'images/人物头像/林德里克.jpg',
+                    desc: `
+                        <p><strong>人际关系：</strong></p>
+                        <p>父亲：xxx  母亲：xxx</p>
+
+                        <p><strong>人物生平：</strong></p>
+                        <p>第一段内容……</p>
+                        <p>第二段内容，其中有个关键词叫<em>斜体跳转词</em>。</p>
+
+                        <p><strong>性格特点：</strong></p>
+                        <p>性格描述……</p>
+
+                        <p><strong>喜好：</strong></p>
+                        <p>喜欢xxx，不喜欢xxx。</p>
+                    `
+                },
+                {
+                    id: 'twenty',
+                    name: '二十号',
+                    meta: '男 · 25岁 · 哑巴',
+                    img: 'images/人物头像/二十号.jpg',
+                    desc: `
+                        <p><strong>人际关系：</strong></p>
+                        <p>父亲：xxx  母亲：xxx</p>
+
+                        <p><strong>人物生平：</strong></p>
+                        <p>第一段内容……</p>
+                        <p>第二段内容，其中有个关键词叫<em>斜体跳转词</em>。</p>
+
+                        <p><strong>性格特点：</strong></p>
+                        <p>性格描述……</p>
+
+                        <p><strong>喜好：</strong></p>
+                        <p>喜欢xxx，不喜欢xxx。</p>
+                    `
+                }
+            ],
+            '造物之罪': [
+                {
+                    id: 'oisin',
+                    name: '欧辛·罗斯伍德',
+                    meta: '男 · 27岁 · 规则世界',
+                    img: 'images/人物头像/欧辛.jpg',
+                    desc: `
+                        <p><strong>人际关系：</strong></p>
+                        <p>父亲：xxx  母亲：xxx</p>
+
+                        <p><strong>人物生平：</strong></p>
+                        <p>第一段内容……</p>
+                        <p>第二段内容，其中有个关键词叫<em>斜体跳转词</em>。</p>
+
+                        <p><strong>性格特点：</strong></p>
+                        <p>性格描述……</p>
+
+                        <p><strong>喜好：</strong></p>
+                        <p>喜欢xxx，不喜欢xxx。</p>
+                    `
+                },
+                {
+                    id: 'samuel',
+                    name: '塞缪尔·杰森',
+                    meta: '男 · 25岁 · 规则世界',
+                    img: 'images/人物头像/塞缪尔.jpg',
+                    desc: `
+                        <p><strong>人际关系：</strong></p>
+                        <p>父亲：xxx  母亲：xxx</p>
+
+                        <p><strong>人物生平：</strong></p>
+                        <p>第一段内容……</p>
+                        <p>第二段内容，其中有个关键词叫<em>斜体跳转词</em>。</p>
+
+                        <p><strong>性格特点：</strong></p>
+                        <p>性格描述……</p>
+
+                        <p><strong>喜好：</strong></p>
+                        <p>喜欢xxx，不喜欢xxx。</p>
+                    `
+                },
+                {
+                    id: 'liberty',
+                    name: '丽波缇·罗斯',
+                    meta: '女 · 28岁 · 造物世界',
+                    img: 'images/人物头像/丽波缇.jpg',
+                    desc: `
+                        <p><strong>人际关系：</strong></p>
+                        <p>父亲：xxx  母亲：xxx</p>
+
+                        <p><strong>人物生平：</strong></p>
+                        <p>第一段内容……</p>
+                        <p>第二段内容，其中有个关键词叫<em>斜体跳转词</em>。</p>
+
+                        <p><strong>性格特点：</strong></p>
+                        <p>性格描述……</p>
+
+                        <p><strong>喜好：</strong></p>
+                        <p>喜欢xxx，不喜欢xxx。</p>
+                    `
+                },
+                {
+                    id: 'socrates',
+                    name: '苏格拉底',
+                    meta: '女 · 29岁 · 造物世界',
+                    img: 'images/人物头像/苏格拉底.jpg',
+                    desc: `
+                        <p><strong>人际关系：</strong></p>
+                        <p>父亲：xxx  母亲：xxx</p>
+
+                        <p><strong>人物生平：</strong></p>
+                        <p>第一段内容……</p>
+                        <p>第二段内容，其中有个关键词叫<em>斜体跳转词</em>。</p>
+
+                        <p><strong>性格特点：</strong></p>
+                        <p>性格描述……</p>
+
+                        <p><strong>喜好：</strong></p>
+                        <p>喜欢xxx，不喜欢xxx。</p>
+                    `
+                }
+            ],
+            '清醒梦': [],
+            '机器人没有心脏': [],
+            '屠龙请睁眼': []
+        },
+
+        // ---- 航线地图 ----
+        routes: [{
+            id: 'route211',
+            name: '211号航线',
+            sub: '现实世界',
+            desc: '布兰森穿越之前所居住的普通现代世界。',
+            mapImage: '',
+            regions: []
+        }, {
+            id: 'route417',
+            name: '417号航线',
+            sub: '基塔世界',
+            desc: '一个融合了其他世界的奇异世界。精灵、兽人、迪雅人、暗影生物共存。',
+            mapImage: 'images/航线地图/417号航线.jpg',
+            regions: [{
+                id: 'greenwood',
+                name: '绿林',
+                sub: '绿地精灵的居住地',
+                xPercent: 10,
+                yPercent: 39,
+                desc: '绿林是绿地精灵的家园，位于基塔大陆的南方……（待补充）',
+                story: '【绿林支线故事待补充】'
+            }, {
+                id: 'lookout-forest',
+                name: '眺望森林',
+                sub: '待补充',
+                xPercent: 13,
+                yPercent: 50,
+                desc: '眺望森林的详细介绍待补充……',
+                story: '【眺望森林支线故事待补充】'
+            }, {
+                id: 'wasteland',
+                name: '荒芜地',
+                sub: '待补充',
+                xPercent: 16,
+                yPercent: 56,
+                desc: '荒芜地的详细介绍待补充……',
+                story: '【荒芜地支线故事待补充】'
+            }, {
+                id: 'stone-land',
+                name: '石地',
+                sub: '待补充',
+                xPercent: 31,
+                yPercent: 56,
+                desc: '石地的详细介绍待补充……',
+                story: '【石地支线故事待补充】'
+            }, {
+                id: 'redleaf-town',
+                name: '红叶镇',
+                sub: '待补充',
+                xPercent: 23,
+                yPercent: 54,
+                desc: '红叶镇的详细介绍待补充……',
+                story: '【红叶镇支线故事待补充】'
+            }, {
+                id: 'white-land',
+                name: '白地',
+                sub: '白地精灵的居住地',
+                xPercent: 38,
+                yPercent: 70,
+                desc: '白地位于基塔大陆……（待补充）',
+                story: '【白地支线故事待补充】'
+            }, {
+                id: 'cave',
+                name: '洞穴',
+                sub: '待补充',
+                xPercent: 56,
+                yPercent: 67,
+                desc: '洞穴的详细介绍待补充……',
+                story: '【洞穴支线故事待补充】'
+            }, {
+                id: 'mountain',
+                name: '山地',
+                sub: '待补充',
+                xPercent: 12,
+                yPercent: 88,
+                desc: '山地的详细介绍待补充……',
+                story: '【山地支线故事待补充】'
+            }, {
+                id: 'unknown',
+                name: '？？？',
+                sub: '待补充',
+                xPercent: 70,
+                yPercent: 41,
+                desc: '前面的区域，以后再来探索吧……',
+                story: '【？？？支线故事待补充】'
+            }]
+        }, {
+            id: 'route240',           // 唯一标识，英文/拼音，如 'route-666'
+            name: '240号航线',          // 航线名称
+            sub: '混乱世界',              // 如 '现实世界'、'魔法世界'
+            desc: '这个世界的法律好像很混乱',   // 一句话简介
+            mapImage: 'images/航线地图/240.jpg',   // 地图图片路径，没有就留空 ''
+            regions: [{
+                id: 'central-court',
+                name: '中央法院',
+                sub: '待补充',
+                xPercent: 50,
+                yPercent: 48,
+                desc: '中央法院的详细介绍待补充……',
+                story: '【中央法院支线故事待补充】'
+            }, {
+                id: 'black-queen-community',
+                name: '黑皇后社区',
+                sub: '待补充',
+                xPercent: 44,
+                yPercent: 34,
+                desc: '黑皇后社区的详细介绍待补充……',
+                story: '【黑皇后社区支线故事待补充】'
+            }, {
+                id: 'chaos-management-bureau',
+                name: '混乱世界管理局',
+                sub: '待补充',
+                xPercent: 60,
+                yPercent: 59,
+                desc: '混乱世界管理局的详细介绍待补充……',
+                story: '【混乱世界管理局支线故事待补充】'
+            }, {
+                id: 'uptown',
+                name: '上城',
+                sub: '待补充',
+                xPercent: 63,
+                yPercent: 30,
+                desc: '上城的详细介绍待补充……',
+                story: '【上城支线故事待补充】'
+            }, {
+                id: 'downtown-police',
+                name: '下城警局',
+                sub: '待补充',
+                xPercent: 42,
+                yPercent: 7,
+                desc: '下城警局的详细介绍待补充……',
+                story: '【下城警局支线故事待补充】'
+            }, {
+                id: 'white-community',
+                name: '白社区',
+                sub: '待补充',
+                xPercent: 16,
+                yPercent: 29,
+                desc: '白社区的详细介绍待补充……',
+               story: '【白社区支线故事待补充】'
+            }, {
+                id: 'st-peter-manor',
+                name: '圣彼得庄园',
+                sub: '待补充',
+                xPercent: 17,
+                yPercent: 66,
+                desc: '圣彼得庄园的详细介绍待补充……',
+                story: '【圣彼得庄园支线故事待补充】'
+            }, {
+                id: 'happy-spring',
+                name: '幸福泉',
+                sub: '待补充',
+                xPercent: 73,
+                yPercent: 75,
+                desc: '幸福泉的详细介绍待补充……',
+                story: '【幸福泉支线故事待补充】'
+            }, {
+                id: 'amusement-park',
+                name: '阿姆斯门特',
+                sub: '待补充',
+                xPercent: 91,
+                yPercent: 86,
+                desc: '阿姆斯门特的详细介绍待补充……',
+                story: '【阿姆斯门特支线故事待补充】'
+            }, {
+                id: 'old-town-72',
+                name: '72号老城',
+                sub: '待补充',
+                xPercent: 87,
+                yPercent: 24,
+                desc: '72号老城的详细介绍待补充……',
+                story: '【72号老城支线故事待补充】'
+            }, {
+                id: 'downtown',
+                name: '下城',
+                sub: '待补充',
+                xPercent: 27,
+                yPercent: 31,
+                desc: '下城的详细介绍待补充……',
+                story: '【下城支线故事待补充】'
+            }]
+        }, {
+            id: 'route246',           // 唯一标识，英文/拼音，如 'route-666'
+            name: '246号航线',          // 航线名称
+            sub: '规则世界',              // 如 '现实世界'、'魔法世界'
+            desc: '副本游戏和规则怪谈堆砌出来的世界',   // 一句话简介
+            mapImage: 'images/航线地图/246.jpg',   // 地图图片路径，没有就留空 ''
+            regions: [
+                  {
+                         id: 'region-xxx',          // 唯一标识，如 'greenwood'
+                         name: '地区名称',           // 显示在地图上的名字
+                         sub: '副标题/种族',         // 如 '绿地精灵的居住地'
+                         xPercent: 50,              // 地图上的 X 坐标百分比（0~100）
+                         yPercent: 50,              // 地图上的 Y 坐标百分比（0~100）
+                         desc: '地区的详细介绍……',
+                         story: '这个地区的支线故事……'   // 可选
+                  }, 
+            ]
+        }, {
+            id: 'route327',           // 唯一标识，英文/拼音，如 'route-666'
+            name: '327号航线',          // 航线名称
+            sub: '童话世界',              // 如 '现实世界'、'魔法世界'
+            desc: '梦一般的房间',   // 一句话简介
+            mapImage: 'images/航线地图/327.jpg',   // 地图图片路径，没有就留空 ''
+            regions: [
+                  {
+                         id: 'region-xxx',          // 唯一标识，如 'greenwood'
+                         name: '地区名称',           // 显示在地图上的名字
+                         sub: '副标题/种族',         // 如 '绿地精灵的居住地'
+                         xPercent: 50,              // 地图上的 X 坐标百分比（0~100）
+                         yPercent: 50,              // 地图上的 Y 坐标百分比（0~100）
+                         desc: '地区的详细介绍……',
+                         story: '这个地区的支线故事……'   // 可选
+                  }, 
+            ]
+        }, {
+            id: 'route1',           // 唯一标识，英文/拼音，如 'route-666'
+            name: '1号航线',          // 航线名称
+            sub: '重创世界',              // 如 '现实世界'、'魔法世界'
+            desc: '过去',   // 一句话简介
+            mapImage: 'images/航线地图/1.jpg',   // 地图图片路径，没有就留空 ''
+            regions: [
+                  {
+                         id: 'region-xxx',          // 唯一标识，如 'greenwood'
+                         name: '地区名称',           // 显示在地图上的名字
+                         sub: '副标题/种族',         // 如 '绿地精灵的居住地'
+                         xPercent: 50,              // 地图上的 X 坐标百分比（0~100）
+                         yPercent: 50,              // 地图上的 Y 坐标百分比（0~100）
+                         desc: '地区的详细介绍……',
+                         story: '这个地区的支线故事……'   // 可选
+                  }, 
+            ]
+        }, {
+            id: 'route493',           // 唯一标识，英文/拼音，如 'route-666'
+            name: '493号航线',          // 航线名称
+            sub: '机械世界',              // 如 '现实世界'、'魔法世界'
+            desc: '未来',   // 一句话简介
+            mapImage: 'images/航线地图/你的地图.jpg',   // 地图图片路径，没有就留空 ''
+            regions: [
+                  {
+                         id: 'region-xxx',          // 唯一标识，如 'greenwood'
+                         name: '地区名称',           // 显示在地图上的名字
+                         sub: '副标题/种族',         // 如 '绿地精灵的居住地'
+                         xPercent: 50,              // 地图上的 X 坐标百分比（0~100）
+                         yPercent: 50,              // 地图上的 Y 坐标百分比（0~100）
+                         desc: '地区的详细介绍……',
+                         story: '这个地区的支线故事……'   // 可选
+                  }, 
+            ]
+        }, {
+            id: 'route361',           // 唯一标识，英文/拼音，如 'route-666'
+            name: '361号航线',          // 航线名称
+            sub: '魔法世界',              // 如 '现实世界'、'魔法世界'
+            desc: '请来屠龙吧',   // 一句话简介
+            mapImage: 'images/航线地图/你的地图.jpg',   // 地图图片路径，没有就留空 ''
+            regions: [
+                  {
+                         id: 'region-xxx',          // 唯一标识，如 'greenwood'
+                         name: '地区名称',           // 显示在地图上的名字
+                         sub: '副标题/种族',         // 如 '绿地精灵的居住地'
+                         xPercent: 50,              // 地图上的 X 坐标百分比（0~100）
+                         yPercent: 50,              // 地图上的 Y 坐标百分比（0~100）
+                         desc: '地区的详细介绍……',
+                         story: '这个地区的支线故事……'   // 可选
+                  }, 
+            ]
+        }, {
+            id: 'route-xxx',           // 唯一标识，英文/拼音，如 'route-666'
+            name: 'XXX号航线',          // 航线名称
+            sub: '副标题',              // 如 '现实世界'、'魔法世界'
+            desc: '航线的整体描述……',   // 一句话简介
+            mapImage: 'images/航线地图/你的地图.jpg',   // 地图图片路径，没有就留空 ''
+            regions: [
+                  {
+                         id: 'region-xxx',          // 唯一标识，如 'greenwood'
+                         name: '地区名称',           // 显示在地图上的名字
+                         sub: '副标题/种族',         // 如 '绿地精灵的居住地'
+                         xPercent: 50,              // 地图上的 X 坐标百分比（0~100）
+                         yPercent: 50,              // 地图上的 Y 坐标百分比（0~100）
+                         desc: '地区的详细介绍……',
+                         story: '这个地区的支线故事……'   // 可选
+                  }, 
+            ]
+        }, {
+            id: 'route-xxx',           // 唯一标识，英文/拼音，如 'route-666'
+            name: 'XXX号航线',          // 航线名称
+            sub: '副标题',              // 如 '现实世界'、'魔法世界'
+            desc: '航线的整体描述……',   // 一句话简介
+            mapImage: 'images/航线地图/你的地图.jpg',   // 地图图片路径，没有就留空 ''
+            regions: [
+                  {
+                         id: 'region-xxx',          // 唯一标识，如 'greenwood'
+                         name: '地区名称',           // 显示在地图上的名字
+                         sub: '副标题/种族',         // 如 '绿地精灵的居住地'
+                         xPercent: 50,              // 地图上的 X 坐标百分比（0~100）
+                         yPercent: 50,              // 地图上的 Y 坐标百分比（0~100）
+                         desc: '地区的详细介绍……',
+                         story: '这个地区的支线故事……'   // 可选
+                  }, 
+            ]
+        }, {
+            id: 'route-xxx',           // 唯一标识，英文/拼音，如 'route-666'
+            name: 'XXX号航线',          // 航线名称
+            sub: '副标题',              // 如 '现实世界'、'魔法世界'
+            desc: '航线的整体描述……',   // 一句话简介
+            mapImage: 'images/航线地图/你的地图.jpg',   // 地图图片路径，没有就留空 ''
+            regions: [
+                  {
+                         id: 'region-xxx',          // 唯一标识，如 'greenwood'
+                         name: '地区名称',           // 显示在地图上的名字
+                         sub: '副标题/种族',         // 如 '绿地精灵的居住地'
+                         xPercent: 50,              // 地图上的 X 坐标百分比（0~100）
+                         yPercent: 50,              // 地图上的 Y 坐标百分比（0~100）
+                         desc: '地区的详细介绍……',
+                         story: '这个地区的支线故事……'   // 可选
+                  }, 
+            ]
+        }],
+
+        // ---- 历史大事件 ----
+        events: [{
+            id: 'chaos',
+            name: '混乱时期',
+            sub: '多族人混战',
+            img: '',
+            desc: '基塔世界历史上最黑暗的时代。多个种族为了争夺「时之裂隙」的控制权，展开了长达百年的战争。'
+        }],
+
+        // ---- 名词解释按板块分组 ----
+        glossary: {
+            '拯救世界': [
+                {
+                    id: 'gloss-diya',
+                    term: '迪雅人',
+                    sub: '普通人类',
+                    img: '',
+                    desc: '普通人类，基塔世界中最常见的种族。布兰森·丹尼尔正是一名迪雅人。'
+                },
+                {
+                    id: 'gloss-fissure',
+                    term: '时之裂隙',
+                    sub: '远古遗迹',
+                    img: '',
+                    desc: '连接不同世界的远古遗迹，是211号航线和417号航线的源头。'
+                },
+                {
+                    id: 'gloss-使者',
+                    term: '时之使者',
+                    sub: '被选中之人',
+                    img: '',
+                    desc: '被时之裂隙选中的特殊存在，拥有穿越不同世界的能力。布兰森正是这一代的时之使者。'
+                },
+                {
+                    id: 'gloss-wind',
+                    term: '风语者',
+                    sub: '精灵族高阶职衔',
+                    img: '',
+                    desc: '精灵族中的高阶职衔，能够与风对话，预知天气变化，是优秀的斥候与射手。'
+                }
+            ],
+            '造物之罪': [],
+            '清醒梦': [],
+            '机器人没有心脏': [],
+            '屠龙请睁眼': []
+        },
+
+        // ---- 👇 生日数据（和 glossary 平级） ----
+        birthdays: [
+            {
+                id: 'lindrick',
+                name: 'Lindrick Roosevelt',
+                date: '09-07',
+                message: '可爱的朋友：Hello~~今天好像是我的生日呀~可惜你吃不到我的蛋糕呀……嘻嘻，开玩笑的，现在我要去找我的茉莉吃蛋糕咯，你要记得来啊',
+                quote: '"嘻嘻，蛋糕要配牛奶才好吃哦~"'
+            }
+            // 以后添加更多角色，按这个格式继续加
+        ],
+
+        // ---- 👇 更新通知（和 glossary 平级） ----
+        updateLetters: [
+            // 格式示例：
+            // {
+            //     id: 'update-001',
+            //     title: '📖 新章节发布 · 第十七章',
+            //     content: '布兰森终于穿过了那扇门……',
+            //     date: '2026-09-07',
+            //     type: '更新通知'
+            // }
+        ]
+    };
+
+    // 板块顺序（用于显示）
+    const WORLD_ORDER = ['拯救世界', '造物之罪', '清醒梦', '机器人没有心脏', '屠龙请睁眼'];
+
+    // ================================================================
+    // 状态
+    // ================================================================
+
+    let state = {
+        view: 'synopsis',       // 'synopsis' | 'characters' | 'routes' | 'events' | 'glossary' | 'search' | 'mailbox'
+        selectedId: null,
+        routeId: null,
+        currentWorld: null,
+        currentList: null,
+    };
+
+    const mainEl = document.getElementById('mainContent');
+    const menuLinks = document.querySelectorAll('#menuNav a');
+    const searchInput = document.getElementById('searchInput');
+
+    // ================================================================
+    // 渲染函数
+    // ================================================================
+
+    function render() {
+        const { view, selectedId, routeId, currentWorld, currentList } = state;
+
+        menuLinks.forEach(link => {
+            link.classList.toggle('active', link.dataset.view === view);
+        });
+
+        switch (view) {
+            case 'synopsis':
+                renderSynopsis();
+                break;
+            case 'characters':
+                if (selectedId && currentWorld) {
+                    const items = DATA.characters[currentWorld] || [];
+                    const item = items.find(i => i.id === selectedId);
+                    if (item) {
+                        renderDetail('characters', `人物介绍 · ${currentWorld}`, item);
+                        return;
+                    }
+                    state.selectedId = null;
+                }
+                if (currentWorld) {
+                    renderWorldList('characters', currentWorld, DATA.characters[currentWorld] || []);
+                } else {
+                    renderWorldSelector('characters', '人物介绍', DATA.characters);
+                }
+                break;
+            case 'glossary':
+                if (selectedId && currentWorld) {
+                    const items = DATA.glossary[currentWorld] || [];
+                    const item = items.find(i => i.id === selectedId);
+                    if (item) {
+                        renderDetail('glossary', `名词解释 · ${currentWorld}`, item);
+                        return;
+                    }
+                    state.selectedId = null;
+                }
+                if (currentWorld) {
+                    renderWorldList('glossary', currentWorld, DATA.glossary[currentWorld] || []);
+                } else {
+                    renderWorldSelector('glossary', '名词解释', DATA.glossary);
+                }
+                break;
+            case 'routes':
+                if (selectedId && routeId) {
+                    const route = DATA.routes.find(r => r.id === routeId);
+                    if (route) {
+                        const region = route.regions.find(r => r.id === selectedId);
+                        if (region) {
+                            renderDetail('routes', '航线地图', region);
+                            return;
+                        }
+                    }
+                    state.selectedId = null;
+                }
+                if (routeId) {
+                    const route = DATA.routes.find(r => r.id === routeId);
+                    if (route) {
+                        renderMap(route);
+                        return;
+                    }
+                    state.routeId = null;
+                }
+                renderRouteList();
+                break;
+            case 'events':
+                renderEventsList();
+                break;
+            case 'mailbox':
+                renderMailbox();
+                break;
+            case 'search':
+                // 搜索由搜索框触发，不在此处理
+                break;
+            default:
+                mainEl.innerHTML = '<p>页面建设中…</p>';
+        }
+
+        mainEl.scrollTop = 0;
+
+        // 检查生日（只在页面加载时检查）
+        if (!window._birthdayChecked) {
+            checkBirthdays();
+            window._birthdayChecked = true;
+        }
+    }
+
+    // ---- 故事梗概 ----
+    function renderSynopsis() {
+        const s = DATA.synopsis;
+        let stars = '';
+        for (let i = 0; i < 35; i++) {
+            const left = Math.random() * 100;
+            const size = 1.5 + Math.random() * 2.5;
+            const duration = 12 + Math.random() * 18;
+            const delay = Math.random() * 20;
+            const opacity = 0.3 + Math.random() * 0.5;
+            stars += `<span style="left:${left}%; width:${size}px; height:${size}px; animation-duration:${duration}s; animation-delay:${delay}s; opacity:${opacity};"></span>`;
+        }
+        mainEl.innerHTML = `
+            <div class="page-synopsis" id="synopsisPage">
+                <div class="veil"></div>
+                <div class="stardust">${stars}</div>
+                <div class="book-title">${s.title}</div>
+                <div class="book-sub">${s.subtitle}</div>
+                <div class="book-divider"></div>
+                <div class="synopsis-text">${s.text}</div>
+            </div>
+        `;
+    }
+
+    // ---- 板块选择器 ----
+    function renderWorldSelector(type, title, dataObj) {
+        const iconMap = {
+            '拯救世界': '🦌',
+            '造物之罪': '🦊',
+            '清醒梦': '☁️',
+            '机器人没有心脏': '⚙️',
+            '屠龙请睁眼': '👻'
+        };
+
+        let html = `
+            <div class="list-page">
+                <div class="page-title">${title} <small>选择世界</small></div>
+                <div class="item-list world-list">
+        `;
+        WORLD_ORDER.forEach(world => {
+            const count = (dataObj[world] || []).length;
+            const icon = iconMap[world] || '📖';
+            html += `
+                <button class="item-btn world-btn" data-world="${world}">
+                    <span class="btn-icon">${icon}</span>
+                    <span class="btn-info">
+                        <span class="btn-name">${world}</span>
+                        <span class="btn-badge">${count} 个词条</span>
+                    </span>
+                    <span class="btn-count">✦</span>
+                </button>
+            `;
+        });
+        html += `</div></div>`;
+        mainEl.innerHTML = html;
+
+        mainEl.querySelectorAll('.world-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                state.currentWorld = btn.dataset.world;
+                state.selectedId = null;
+                render();
+            });
+        });
+    }
+
+    // ---- 板块内列表 ----
+    function renderWorldList(type, world, items) {
+        const title = type === 'characters' ? '人物介绍' : '名词解释';
+        let html = `
+            <div class="list-page">
+                <div class="page-title">
+                    ${title} · ${world}
+                    <small>共 ${items.length} 个</small>
+                    <button class="back-btn" id="worldBackBtn" style="font-size:13px; color:var(--text-muted); background:transparent; border:1px solid rgba(201,169,110,0.08); padding:6px 18px; border-radius:30px; cursor:default; font-family:var(--font-display); letter-spacing:2px;">← 返回板块</button>
+                </div>
+                <div class="item-list">
+        `;
+        items.forEach(item => {
+            const name = item.term || item.name;
+            const sub = item.sub || '';
+            const subText = sub ? ` <span class="badge">${sub}</span>` : '';
+            html += `
+                <button class="item-btn" data-id="${item.id}">
+                    ${name}${subText}
+                </button>
+            `;
+        });
+        html += `</div></div>`;
+        mainEl.innerHTML = html;
+
+        document.getElementById('worldBackBtn').addEventListener('click', () => {
+            state.currentWorld = null;
+            state.selectedId = null;
+            render();
+        });
+
+        mainEl.querySelectorAll('.item-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                state.selectedId = btn.dataset.id;
+                render();
+            });
+        });
+    }
+
+    // ---- 航线列表 ----
+    function renderRouteList() {
+        const items = DATA.routes;
+        let html = `
+            <div class="list-page">
+                <div class="page-title">🗺️ 航线地图 <small>共 ${items.length} 条</small></div>
+                <div class="item-list">
+        `;
+        items.forEach(item => {
+            const subText = item.sub ? ` <span class="badge">${item.sub}</span>` : '';
+            html += `
+                <button class="item-btn route-entry" data-id="${item.id}">
+                    ${item.name}${subText}
+                </button>
+            `;
+        });
+        html += `</div></div>`;
+        mainEl.innerHTML = html;
+
+        mainEl.querySelectorAll('.route-entry').forEach(btn => {
+            btn.addEventListener('click', () => {
+                state.routeId = btn.dataset.id;
+                state.selectedId = null;
+                render();
+            });
+        });
+    }
+
+    // ---- 地图 ----
+    function renderMap(route) {
+        const regions = route.regions || [];
+        const hasImage = route.mapImage && route.mapImage.trim() !== '';
+
+        let html = `
+            <div class="map-page">
+                <div class="map-title">
+                    ${route.name} <small>${route.sub}</small>
+                    <button class="back-btn" id="mapBackBtn" style="float:right; font-size:13px; color:var(--text-muted); background:transparent; border:1px solid rgba(201,169,110,0.08); padding:6px 18px; border-radius:30px; cursor:default; font-family:var(--font-display); letter-spacing:2px;">← 返回列表</button>
+                </div>
+                <div style="margin-bottom:16px; color:var(--text-muted); font-size:14px; letter-spacing:1px;">${route.desc}</div>
+                <div class="map-container" id="mapContainer">
+        `;
+        if (hasImage) {
+            html += `<img src="${route.mapImage}" alt="${route.name}地图" id="mapImage" />`;
+            if (regions.length > 0) {
+                html += regions.map(r => `
+                    <div class="map-marker" style="left:${r.xPercent}%; top:${r.yPercent}%;" data-id="${r.id}">
+                        <div class="dot"></div>
+                        <div class="label">${r.name}</div>
+                    </div>
+                `).join('');
+            } else {
+                html += `<div class="map-hint" style="position:absolute; bottom:30px; left:50%; transform:translateX(-50%); color:var(--text-muted); background:rgba(14,13,12,0.8); padding:6px 20px; border-radius:20px; font-family:var(--font-display); letter-spacing:1px;">暂无地区，后续添加</div>`;
+            }
+        } else {
+            html += `<div style="padding:60px 20px; text-align:center; color:var(--text-muted); font-size:16px; letter-spacing:2px; font-family:var(--font-display);">🗺️ 地图图片待上传</div>`;
+        }
+        html += `</div>${hasImage && regions.length > 0 ? `<div class="map-hint">✦ 点击地名，聆听此地的故事 ✦</div>` : ''}</div>`;
+
+        mainEl.innerHTML = html;
+
+        document.getElementById('mapBackBtn').addEventListener('click', () => {
+            state.routeId = null;
+            state.selectedId = null;
+            render();
+        });
+
+        const container = document.getElementById('mapContainer');
+        if (container) {
+            container.querySelectorAll('.map-marker').forEach(marker => {
+                marker.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const id = marker.dataset.id;
+                    if (id) {
+                        state.selectedId = id;
+                        render();
+                    }
+                });
+            });
+        }
+    }
+
+    // ---- 详情页 ----
+    function renderDetail(viewKey, title, item) {
+        const isRegion = viewKey === 'routes' && state.routeId;
+        const isWorldItem = viewKey === 'characters' || viewKey === 'glossary';
+        let backLabel = '← 返回';
+
+        if (isRegion) {
+            backLabel = '❧ 返回地图';
+        } else if (isWorldItem && state.currentWorld) {
+            backLabel = `❧ 返回 ${state.currentWorld}`;
+        } else {
+            backLabel = `❧ 返回 ${title}`;
+        }
+
+        let imageHtml = '';
+        if (item.img && item.img.trim() !== '') {
+            imageHtml = `<img src="${item.img}" alt="${item.name}" style="width:180px; height:180px; border-radius:50%; object-fit:cover; border:2px solid var(--gold); box-shadow:0 0 40px rgba(201,169,110,0.1);" />`;
+        } else {
+            imageHtml = `<div class="portrait-placeholder"><span>📜<br />画像待补</span></div>`;
+        }
+
+        const subtitle = item.meta || item.sub || '';
+
+        let storyHtml = '';
+        if (item.story) {
+            storyHtml = `
+                <div class="story-block">
+                    <h4>📖 支线故事</h4>
+                    <p>${item.story}</p>
+                </div>
+            `;
+        }
+
+        mainEl.innerHTML = `
+            <div class="detail-page">
+                <button class="back-btn" id="backBtn">${backLabel}</button>
+                <div class="detail-card">
+                    <div class="portrait-wrap">${imageHtml}</div>
+                    <h2>${item.name || item.term}</h2>
+                    ${subtitle ? `<div class="meta">${subtitle}</div>` : ''}
+                    <p>${item.desc}</p>
+                    ${storyHtml}
+                </div>
+            </div>
+        `;
+
+        // 斜体跳转
+        const card = document.querySelector('.detail-card');
+        if (card) {
+            const ems = card.querySelectorAll('em');
+            ems.forEach(el => {
+                el.style.cursor = 'pointer';
+                el.style.color = 'var(--gold-light)';
+                el.style.textDecoration = 'underline';
+                el.style.textDecorationColor = 'rgba(201,169,110,0.3)';
+                el.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    const text = this.textContent.trim();
+                    navigateToEntity(text);
+                });
+            });
+        }
+
+        document.getElementById('backBtn').addEventListener('click', () => {
+            state.selectedId = null;
+            render();
+        });
+    }
+
+    // ---- 事件列表 ----
+    function renderEventsList() {
+        const items = DATA.events;
+        if (state.selectedId) {
+            const item = items.find(i => i.id === state.selectedId);
+            if (item) {
+                renderDetail('events', '历史大事件', item);
+                return;
+            }
+            state.selectedId = null;
+        }
+
+        let html = `
+            <div class="list-page">
+                <div class="page-title">⚡ 历史大事件 <small>共 ${items.length} 件</small></div>
+                <ul class="timeline">
+        `;
+        items.forEach(item => {
+            const subText = item.sub ? ` ${item.sub}` : '';
+            html += `
+                <li data-id="${item.id}">
+                    <strong>${item.name}</strong> ${subText}
+                    <span class="click-hint">✦ 点击查看</span>
+                </li>
+            `;
+        });
+        html += `</ul></div>`;
+        mainEl.innerHTML = html;
+
+        mainEl.querySelectorAll('.timeline li').forEach(li => {
+            li.addEventListener('click', () => {
+                state.selectedId = li.dataset.id;
+                render();
+            });
+        });
+    }
+
+    // ---- 搜索功能 ----
+    function performSearch(query) {
+        if (!query || query.trim() === '') {
+            if (state.view === 'search') {
+                state.view = 'synopsis';
+                state.selectedId = null;
+                state.routeId = null;
+                state.currentWorld = null;
+                render();
+            }
+            return;
+        }
+
+        const q = query.trim().toLowerCase();
+        const results = [];
+
+        // 1. 搜索人物
+        for (const [world, items] of Object.entries(DATA.characters)) {
+            for (const item of items) {
+                if (item.name.toLowerCase().includes(q) ||
+                    (item.desc && item.desc.toLowerCase().includes(q))) {
+                    results.push({
+                        type: '人物',
+                        world: world,
+                        id: item.id,
+                        name: item.name,
+                        desc: item.desc,
+                        viewKey: 'characters'
+                    });
+                }
+            }
+        }
+
+        // 2. 搜索名词
+        for (const [world, items] of Object.entries(DATA.glossary)) {
+            for (const item of items) {
+                if (item.term.toLowerCase().includes(q) ||
+                    (item.desc && item.desc.toLowerCase().includes(q))) {
+                    results.push({
+                        type: '名词',
+                        world: world,
+                        id: item.id,
+                        name: item.term,
+                        desc: item.desc,
+                        viewKey: 'glossary'
+                    });
+                }
+            }
+        }
+
+        // 3. 搜索航线
+        for (const route of DATA.routes) {
+            if (route.name.toLowerCase().includes(q)) {
+                results.push({
+                    type: '航线',
+                    world: '—',
+                    id: route.id,
+                    name: route.name,
+                    desc: route.desc,
+                    viewKey: 'routes',
+                    isRoute: true
+                });
+            }
+            for (const region of route.regions) {
+                if (region.name.toLowerCase().includes(q) ||
+                    (region.desc && region.desc.toLowerCase().includes(q))) {
+                    results.push({
+                        type: '地区',
+                        world: route.name,
+                        id: region.id,
+                        name: region.name,
+                        desc: region.desc,
+                        viewKey: 'routes',
+                        routeId: route.id,
+                        isRegion: true
+                    });
+                }
+            }
+        }
+
+        // 4. 搜索事件
+        for (const ev of DATA.events) {
+            if (ev.name.toLowerCase().includes(q) ||
+                (ev.desc && ev.desc.toLowerCase().includes(q))) {
+                results.push({
+                    type: '事件',
+                    world: '—',
+                    id: ev.id,
+                    name: ev.name,
+                    desc: ev.desc,
+                    viewKey: 'events'
+                });
+            }
+        }
+
+        let html = `
+            <div class="list-page search-result">
+                <div class="page-title">
+                    🔍 搜索结果：<span style="font-weight:400;">"${query}"</span>
+                    <small>共 ${results.length} 个</small>
+                </div>
+        `;
+        if (results.length === 0) {
+            html += `<p style="color:var(--text-muted); letter-spacing:1px; padding:30px 0; text-align:center;">未找到相关词条，请尝试其他关键词。</p>`;
+        } else {
+            html += `<div class="item-list">`;
+            results.forEach(r => {
+                const worldTag = r.world !== '—' ? ` <span class="world-tag">${r.world}</span>` : '';
+                const typeTag = ` <span class="type-tag">${r.type}</span>`;
+                let displayName = r.name;
+                const idx = displayName.toLowerCase().indexOf(q);
+                if (idx !== -1) {
+                    const before = displayName.slice(0, idx);
+                    const match = displayName.slice(idx, idx + q.length);
+                    const after = displayName.slice(idx + q.length);
+                    displayName = `${before}<span class="matched-text">${match}</span>${after}`;
+                }
+                html += `
+                    <button class="item-btn result-item" data-id="${r.id}" data-view="${r.viewKey}" data-routeid="${r.routeId || ''}" data-isregion="${r.isRegion || false}" data-isroute="${r.isRoute || false}">
+                        ${displayName}${typeTag}${worldTag}
+                    </button>
+                `;
+            });
+            html += `</div>`;
+        }
+        html += `</div>`;
+        mainEl.innerHTML = html;
+
+        mainEl.querySelectorAll('.result-item').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const id = btn.dataset.id;
+                const view = btn.dataset.view;
+                const routeId = btn.dataset.routeid || null;
+                state.view = view;
+                state.selectedId = id;
+                state.routeId = routeId || null;
+                state.currentWorld = null;
+                render();
+            });
+        });
+    }
+
+    // ---- 全局跳转函数 ----
+    function navigateToEntity(text) {
+        for (const [world, items] of Object.entries(DATA.characters)) {
+            const found = items.find(c => c.name === text);
+            if (found) {
+                state.view = 'characters';
+                state.currentWorld = world;
+                state.selectedId = found.id;
+                state.routeId = null;
+                render();
+                return;
+            }
+        }
+        for (const [world, items] of Object.entries(DATA.glossary)) {
+            const found = items.find(g => g.term === text);
+            if (found) {
+                state.view = 'glossary';
+                state.currentWorld = world;
+                state.selectedId = found.id;
+                state.routeId = null;
+                render();
+                return;
+            }
+        }
+        const evFound = DATA.events.find(e => e.name === text);
+        if (evFound) {
+            state.view = 'events';
+            state.selectedId = evFound.id;
+            state.routeId = null;
+            render();
+            return;
+        }
+        let route = DATA.routes.find(r => r.name === text);
+        if (route) {
+            state.view = 'routes';
+            state.routeId = route.id;
+            state.selectedId = null;
+            render();
+            return;
+        }
+        for (let r of DATA.routes) {
+            const region = r.regions.find(reg => reg.name === text);
+            if (region) {
+                state.view = 'routes';
+                state.routeId = r.id;
+                state.selectedId = region.id;
+                render();
+                return;
+            }
+        }
+        alert(`「${text}」的介绍尚未添加，敬请期待！`);
+    }
+
+    // ---- 菜单切换 ----
+    menuLinks.forEach(link => {
+        link.addEventListener('click', (e) => {
+            e.preventDefault();
+            const view = link.dataset.view;
+            state.view = view;
+            state.selectedId = null;
+            state.routeId = null;
+            state.currentWorld = null;
+            state.currentList = null;
+            searchInput.value = '';
+            render();
+        });
+    });
+
+    // ---- 搜索框事件 ----
+    searchInput.addEventListener('input', function() {
+        const q = this.value.trim();
+        if (q === '') {
+            if (state.view === 'search') {
+                state.view = 'synopsis';
+                state.selectedId = null;
+                state.routeId = null;
+                state.currentWorld = null;
+                render();
+            }
+            return;
+        }
+        state.view = 'search';
+        state.selectedId = null;
+        state.routeId = null;
+        state.currentWorld = null;
+        performSearch(q);
+    });
+
+    // ================================================================
+    // 角色信箱相关函数
+    // ================================================================
+
+    function renderMailbox() {
+        const mails = getMails();
+        mails.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+        const unreadCount = mails.filter(m => !m.read).length;
+        updateMailDot(unreadCount);
+
+        let html = `
+            <div class="list-page">
+                <div class="page-title">
+                    📬 角色信箱
+                    <small>共 ${mails.length} 封</small>
+                    <button class="back-btn" id="mailFilterBtn" style="font-size:13px; color:var(--text-muted); background:transparent; border:1px solid rgba(201,169,110,0.08); padding:6px 18px; border-radius:30px; cursor:default; font-family:var(--font-display); letter-spacing:2px;">⭐ 收藏</button>
+                </div>
+                <div class="item-list" id="mailList">
+        `;
+
+        if (mails.length === 0) {
+            html += `<p style="color:var(--text-muted); padding:30px 0; text-align:center; letter-spacing:2px;">📭 信箱空空如也，等待第一封信的到来……</p>`;
+        } else {
+            mails.forEach(m => {
+                const isUnread = !m.read;
+                const isStarred = m.starred || false;
+                const title = m.title || `🎂 来自 ${m.name} 的生日信`;
+                html += `
+                    <button class="item-btn mail-item" data-id="${m.id}" style="display:flex; align-items:center; justify-content:space-between; gap:12px;">
+                        <span style="display:flex; align-items:center; gap:10px; flex:1;">
+                            ${isUnread ? '<span style="color:#e74c3c; font-size:12px;">●</span>' : '<span style="color:transparent; font-size:12px;">●</span>'}
+                            ${isStarred ? '⭐' : '☆'}
+                            <span>${title}</span>
+                        </span>
+                        <span style="color:var(--text-muted); font-size:12px; letter-spacing:1px; flex-shrink:0;">${m.date}</span>
+                    </button>
+                `;
+            });
+        }
+
+        html += `</div></div>`;
+        mainEl.innerHTML = html;
+
+        const filterBtn = document.getElementById('mailFilterBtn');
+        let showStarredOnly = false;
+        if (filterBtn) {
+            filterBtn.addEventListener('click', () => {
+                showStarredOnly = !showStarredOnly;
+                filterBtn.textContent = showStarredOnly ? '⭐ 全部' : '⭐ 收藏';
+                renderMailboxFiltered(showStarredOnly);
+            });
+        }
+
+        mainEl.querySelectorAll('.mail-item').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const id = btn.dataset.id;
+                const mail = getMails().find(m => m.id === id);
+                if (mail) {
+                    markMailRead(id);
+                    renderMailDetail(mail);
+                }
+            });
+        });
+    }
+
+    function renderMailDetail(mail) {
+        const isStarred = mail.starred || false;
+        const title = mail.title || `🎂 来自 ${mail.name} 的生日信`;
+        const quote = mail.quote || '';
+
+        mainEl.innerHTML = `
+            <div class="detail-page">
+                <button class="back-btn" id="mailBackBtn">❧ 返回信箱</button>
+                <div class="detail-card" style="max-width:600px; margin:0 auto;">
+                    <div style="text-align:center; margin-bottom:20px;">
+                        <div style="font-size:14px; color:var(--text-muted); letter-spacing:2px; font-family:var(--font-display);">${mail.date}</div>
+                        <h2 style="font-size:24px; margin-top:6px;">${title}</h2>
+                    </div>
+                    <div style="border-top:1px solid var(--border-gold); padding-top:20px;">
+                        <p style="font-size:17px; line-height:2; white-space:pre-wrap; color:var(--text-warm);">${mail.message || mail.content}</p>
+                        ${quote ? `<p style="text-align:right; color:var(--gold); font-family:var(--font-display); letter-spacing:2px; margin-top:16px;">${quote}</p>` : ''}
+                    </div>
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-top:24px; padding-top:16px; border-top:1px solid var(--border-gold);">
+                        <button class="back-btn" id="starBtn" style="margin:0; font-size:13px; letter-spacing:2px; padding:6px 18px;">
+                            ${isStarred ? '⭐ 已收藏' : '☆ 收藏'}
+                        </button>
+                        <span style="font-size:12px; color:var(--text-muted); letter-spacing:1px;">${mail.read ? '已读' : '未读'}</span>
+                    </div>
+                </div>
+            </div>
+        `;
+
+        document.getElementById('mailBackBtn').addEventListener('click', () => {
+            renderMailbox();
+        });
+
+        document.getElementById('starBtn').addEventListener('click', () => {
+            toggleStarMail(mail.id);
+            renderMailDetail(getMails().find(m => m.id === mail.id));
+        });
+    }
+
+    // ---- 邮件数据管理 ----
+    function getMails() {
+        const stored = localStorage.getItem('novel_mails');
+        if (stored) {
+            try { return JSON.parse(stored); } catch (e) { return []; }
+        }
+        return [];
+    }
+
+    function saveMails(mails) {
+        localStorage.setItem('novel_mails', JSON.stringify(mails));
+    }
+
+    function markMailRead(id) {
+        const mails = getMails();
+        const mail = mails.find(m => m.id === id);
+        if (mail) { mail.read = true; saveMails(mails); }
+    }
+
+    function toggleStarMail(id) {
+        const mails = getMails();
+        const mail = mails.find(m => m.id === id);
+        if (mail) { mail.starred = !mail.starred; saveMails(mails); }
+    }
+
+    function addMail(mail) {
+        const mails = getMails();
+        if (mails.find(m => m.id === mail.id)) return;
+        mails.push({ ...mail, read: false, starred: false });
+        mails.sort((a, b) => new Date(a.date) - new Date(b.date));
+        while (mails.length > 30) {
+            const oldest = mails.find(m => !m.starred);
+            if (oldest) {
+                const idx = mails.indexOf(oldest);
+                mails.splice(idx, 1);
+            } else {
+                break;
+            }
+        }
+        saveMails(mails);
+        updateMailDot(getMails().filter(m => !m.read).length);
+    }
+
+    function updateMailDot(count) {
+        const dot = document.getElementById('mailDot');
+        if (dot) {
+            if (count > 0) {
+                dot.classList.remove('hidden');
+            } else {
+                dot.classList.add('hidden');
+            }
+        }
+    }
+
+    function renderMailboxFiltered(starredOnly) {
+        let mails = getMails();
+        if (starredOnly) {
+            mails = mails.filter(m => m.starred);
+        }
+        mails.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+        let html = `
+            <div class="list-page">
+                <div class="page-title">
+                    📬 角色信箱 ${starredOnly ? '⭐ 收藏' : ''}
+                    <small>共 ${mails.length} 封</small>
+                    <button class="back-btn" id="mailFilterBack" style="font-size:13px; color:var(--text-muted); background:transparent; border:1px solid rgba(201,169,110,0.08); padding:6px 18px; border-radius:30px; cursor:default; font-family:var(--font-display); letter-spacing:2px;">← 返回</button>
+                </div>
+                <div class="item-list">
+        `;
+        if (mails.length === 0) {
+            html += `<p style="color:var(--text-muted); padding:30px 0; text-align:center; letter-spacing:2px;">📭 暂无收藏邮件</p>`;
+        } else {
+            mails.forEach(m => {
+                const isUnread = !m.read;
+                const isStarred = m.starred || false;
+                const title = m.title || `🎂 来自 ${m.name} 的生日信`;
+                html += `
+                    <button class="item-btn mail-item" data-id="${m.id}" style="display:flex; align-items:center; justify-content:space-between; gap:12px;">
+                        <span style="display:flex; align-items:center; gap:10px; flex:1;">
+                            ${isUnread ? '<span style="color:#e74c3c; font-size:12px;">●</span>' : '<span style="color:transparent; font-size:12px;">●</span>'}
+                            ${isStarred ? '⭐' : '☆'}
+                            <span>${title}</span>
+                        </span>
+                        <span style="color:var(--text-muted); font-size:12px; letter-spacing:1px; flex-shrink:0;">${m.date}</span>
+                    </button>
+                `;
+            });
+        }
+        html += `</div></div>`;
+        mainEl.innerHTML = html;
+
+        document.getElementById('mailFilterBack').addEventListener('click', () => {
+            renderMailbox();
+        });
+
+        mainEl.querySelectorAll('.mail-item').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const id = btn.dataset.id;
+                const mail = getMails().find(m => m.id === id);
+                if (mail) {
+                    markMailRead(id);
+                    renderMailDetail(mail);
+                }
+            });
+        });
+    }
+
+    // ---- 检查生日 ----
+    function checkBirthdays() {
+        const today = new Date();
+        const month = String(today.getMonth() + 1).padStart(2, '0');
+        const day = String(today.getDate()).padStart(2, '0');
+        const todayStr = `${month}-${day}`;
+
+        const birthdays = DATA.birthdays || [];
+        const matched = birthdays.find(b => b.date === todayStr);
+        if (!matched) return;
+
+        const todayKey = `birthday_${todayStr}`;
+        if (sessionStorage.getItem(todayKey)) return;
+
+        const mailId = `birthday_${matched.id}_${todayStr}`;
+        const mails = getMails();
+        if (!mails.find(m => m.id === mailId)) {
+            addMail({
+                id: mailId,
+                name: matched.name,
+                title: `🎂 来自 ${matched.name} 的生日信`,
+                date: `${today.getFullYear()}-${todayStr}`,
+                message: matched.message,
+                quote: matched.quote || '',
+                read: false,
+                starred: false
+            });
+        }
+
+        showBirthdayCard(matched);
+        sessionStorage.setItem(todayKey, 'true');
+    }
+
+    function showBirthdayCard(data) {
+        // 如果已存在则移除
+        const existing = document.querySelector('.birthday-overlay');
+        if (existing) existing.remove();
+
+        const overlay = document.createElement('div');
+        overlay.className = 'birthday-overlay';
+
+        const card = document.createElement('div');
+        card.className = 'birthday-card';
+
+        // 根据角色配置图标
+        const iconMap = {
+            '林德里克·罗斯福': '🦊',
+            '布兰森·丹尼尔': '🦌',
+            '艾尔兰斯': '🌿',
+            '弗洛伊德·汤姆': '⚔️',
+            '红叶': '🍁',
+            '二十号': '🔇',
+            '欧辛·罗斯伍德': '🦉',
+            '塞缪尔·杰森': '📜',
+            '丽波缇·罗斯': '🌹',
+            '苏格拉底': '📚'
+        };
+        const icon = iconMap[data.name] || '✦';
+
+        card.innerHTML = `
+            <div class="card-inner" id="cardInner">
+                <span class="corner corner-tl">❧</span>
+                <span class="corner corner-tr">❧</span>
+                <span class="corner corner-bl">❧</span>
+                <span class="corner corner-br">❧</span>
+
+                <div class="card-content">
+                    <div class="card-header">═══ ✦  🎂 今日寿星 🎂  ✦ ═══</div>
+                    <div class="card-name">
+                        ${data.name}
+                        <span class="name-icon">${icon}</span>
+                    </div>
+                    <div class="card-message">${data.message}</div>
+                    ${data.quote ? `<div class="card-signature"><span class="sig-icon">${icon}</span> ${data.quote}</div>` : `<div class="card-signature"><span class="sig-icon">${icon}</span> —— ${data.name}</div>`}
+                    <button class="card-close-btn" id="closeBirthday">✦ 已收到 ✦</button>
+                </div>
+            </div>
+        `;
+
+        overlay.appendChild(card);
+        document.body.appendChild(overlay);
+
+        // 点击关闭时先合拢再消失
+        const closeBtn = document.getElementById('closeBirthday');
+        const closeCard = () => {
+            card.classList.add('folding');
+            overlay.classList.add('closing');
+            setTimeout(() => {
+                overlay.remove();
+            }, 700);
+        };
+
+        closeBtn.addEventListener('click', closeCard);
+        overlay.addEventListener('click', (e) => {
+            if (e.target === overlay) closeCard();
+        });
+
+        // 点击信纸展开（如果还没完全展开的话）
+        const cardInner = document.getElementById('cardInner');
+        if (cardInner) {
+            cardInner.addEventListener('click', (e) => {
+                e.stopPropagation();
+                // 如果卡片处于折叠状态，展开它
+                if (card.style.transform === 'scaleY(0.05)') {
+                    card.style.animation = 'none';
+                    // 重新触发展开动画
+                    card.style.transform = 'scaleY(0.05)';
+                    requestAnimationFrame(() => {
+                        card.style.animation = 'bd-unfold 0.9s cubic-bezier(0.34, 1.56, 0.64, 1) forwards';
+                    });
+                }
+            });
+        }
+    }
+
+    // ---- 启动 ----
+    render();
+</script>
+
+<!-- ===== 背景音乐控制 ===== -->
+<div class="music-control" id="musicToggle" title="背景音乐开关">
+    <span id="musicIcon">🎵</span>
+</div>
+<audio id="bgMusic" loop preload="auto">
+    <source src="music/background.mp3" type="audio/mpeg">
+    你的浏览器不支持音频播放，请使用最新版浏览器。
+</audio>
+<script>
+    (function() {
+        const audio = document.getElementById('bgMusic');
+        const toggle = document.getElementById('musicToggle');
+        const icon = document.getElementById('musicIcon');
+        audio.volume = 0.3;
+        let autoPlayAttempted = false;
+
+        function tryAutoPlay() {
+            if (autoPlayAttempted) return;
+            autoPlayAttempted = true;
+            audio.play().then(() => {
+                icon.textContent = '🔊';
+            }).catch(() => {
+                icon.textContent = '🔇';
+                document.addEventListener('click', function firstClick() {
+                    audio.play().then(() => {
+                        icon.textContent = '🔊';
+                    }).catch(() => {});
+                    document.removeEventListener('click', firstClick);
+                }, { once: true });
+            });
+        }
+
+        if (document.readyState === 'complete') {
+            tryAutoPlay();
+        } else {
+            window.addEventListener('load', tryAutoPlay);
+        }
+
+        toggle.addEventListener('click', function(e) {
+            e.stopPropagation();
+            if (audio.paused) {
+                audio.play().then(() => {
+                    icon.textContent = '🔊';
+                }).catch(() => {});
+            } else {
+                audio.pause();
+                icon.textContent = '🔇';
+            }
+        });
+    })();
+</script>
+
+</body>
+</html>
