@@ -1285,77 +1285,55 @@
                 overflow: visible;
             }
             .sidebar {
-                  width: 100%;
-                  height: auto;
-                  position: fixed;
-                  bottom: 0;
-                  left: 0;
-                  right: 0;
-                  flex-direction: row;
-                  flex-wrap: wrap;
-                  padding: 10px 12px;
-                  border-left: none;
-                  border-top: 2px solid var(--border-gold);
-                  gap: 4px;
-                  justify-content: center;
-                  box-shadow: 0 -8px 40px rgba(0, 0, 0, 0.6);
-                  background: linear-gradient(180deg, #1f1914 0%, #16120e 100%);
-                  z-index: 9999;
-                  max-height: 50vh;
-                  overflow-y: auto;
+                width: 100%;
+                height: auto;
+                position: static;
+                flex-direction: row;
+                flex-wrap: wrap;
+                padding: 12px 14px;
+                border-left: none;
+                border-top: 2px solid var(--border-gold);
+                gap: 4px;
+                justify-content: center;
+                box-shadow: 0 -8px 40px rgba(0, 0, 0, 0.4);
             }
             .sidebar::before { display: none; }
             .sidebar .logo { display: none; }
-            .sidebar .search-wrap { width: 100%; order: -1; margin-bottom: 8px; position: relative; }
-            .sidebar .search-wrap input {padding: 10px 12px 10px 36px; font-size: 14px; border-radius: 24px; }
+            .sidebar .search-wrap { width: 100%; order: -1; margin-bottom: 10px; }
             .sidebar nav { flex-direction: row; flex-wrap: wrap; justify-content: center; gap: 4px; flex: none; }
-            .sidebar nav a { padding: 8px 14px; font-size: 13px; letter-spacing: 1px; border-radius: 20px; min-height: 36px; display: flex; align-items: center; }
+            .sidebar nav a { padding: 6px 14px; font-size: 12px; letter-spacing: 1px; }
             .sidebar nav a.active::after { display: none; }
             .sidebar .footer-meta { display: none; }
             .sidebar .nav-divider { display: none; }
 
             .main {
-                padding: 20px 16px 120px 16px;
+                padding: 30px 20px 40px 20px;
                 overflow-y: visible;
                 height: auto;
                 min-height: 100vh;
             }
             .page-synopsis { min-height: auto; padding: 40px 0; }
-            .page-synopsis .book-title { font-size: 26px; letter-spacing: 3px; line-height: 1.4; }
-            .page-synopsis .book-sub { font-size: 13px; letter-spacing: 3px; margin-bottom: 30px; }
-            .page-synopsis .synopsis-text { font-size: 15px; line-height: 1.9; padding: 0 4px; }
+            .page-synopsis .book-title { font-size: 28px; letter-spacing: 4px; }
+            .page-synopsis .book-sub { font-size: 14px; letter-spacing: 4px; }
+            .page-synopsis .synopsis-text { font-size: 15px; line-height: 1.9; }
 
-            .item-list .item-btn { padding: 14px 16px; font-size: 15px; letter-spacing: 1px; border-radius: 8px; }
-
-            .detail-page .detail-card { padding: 22px 18px; }
-            .detail-page .detail-card h2 { font-size: 20px; letter-spacing: 2px; }
+            .detail-page .detail-card { padding: 20px 18px; }
+            .detail-page .detail-card h2 { font-size: 20px; }
             .detail-page .detail-card .portrait-placeholder { width: 130px; height: 130px; }
-            .detail-page .back-btn { font-size: 12px; padding: 8px 16px; letter-spacing: 2px; }
 
-            .world-list .world-btn { padding: 16px 14px; gap: 12px; }
-            .world-list .world-btn .btn-icon { font-size: 22px; width: 38px; height: 38px;}
-            .world-list .world-btn .btn-name { font-size: 15px; letter-spacing: 2px; }
-
-            .list-page .page-title { font-size: 22px; letter-spacing: 2px; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
+            .list-page .page-title { font-size: 22px; letter-spacing: 3px; flex-wrap: wrap; gap: 8px; }
             .list-page .page-title::before { content: ''; display: none; }
-            .map-container { padding: 8px; border-radius: 8px; }
+            .map-container { padding: 10px; }
             .map-marker .label { font-size: 11px; padding: 1px 8px; }
             .map-marker .dot { width: 12px; height: 12px; }
-
-            .timeline li { padding: 12px 14px 12px 36px; font-size: 14px; }  
         }
         @media (max-width: 480px) {
-            .main { padding: 16px 12px 120px 12px; }
+            .main { padding: 20px 14px 30px 14px; }
             .page-synopsis .book-title { font-size: 22px; letter-spacing: 2px; }
-            .page-synopsis .synopsis-text { font-size: 14px; }
-            .item-list .item-btn { font-size: 14px; padding: 12px 14px; }
-            .detail-page .detail-card { padding: 18px 14px; }
-            .detail-page .detail-card h2 { font-size: 18px; }
-            .detail-page .detail-card p { font-size: 14px; }
-            .world-list .world-btn { padding: 14px 12px; }
-            .world-list .world-btn .btn-icon { font-size: 20px; width: 34px; height: 34px; }  
-            .world-list .world-btn .btn-name { font-size: 14px; }
-            .timeline li { padding: 10px 12px 10px 32px; font-size: 13px; }
+            .item-list .item-btn { font-size: 14px; padding: 12px 16px; }
+            .detail-page .detail-card .portrait-placeholder { width: 100px; height: 100px; }
+            .detail-page .back-btn { font-size: 11px; padding: 6px 14px 6px 12px; letter-spacing: 2px; }
+            .timeline li { padding: 14px 16px 14px 40px; font-size: 14px; }
         }
     </style>
 </head>
