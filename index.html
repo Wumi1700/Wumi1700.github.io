@@ -1335,6 +1335,135 @@
             .detail-page .back-btn { font-size: 11px; padding: 6px 14px 6px 12px; letter-spacing: 2px; }
             .timeline li { padding: 14px 16px 14px 40px; font-size: 14px; }
         }
+                /* ================================================================
+           15.世界碎片
+           ================================================================ */
+        .world-page {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: calc(100vh - 120px);
+            padding: 40px 20px;
+            text-align: center;
+        }
+
+        .world-quote-box {
+            min-height: 90px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 30px;
+            padding: 0 20px;
+        }
+
+        .world-quote {
+            font-family: var(--font-body);
+            font-size: 19px;
+            line-height: 1.9;
+            color: var(--gold-light);
+            letter-spacing: 2px;
+            max-width: 600px;
+            font-style: italic;
+            text-shadow: 0 0 30px rgba(201, 169, 110, 0.1);
+        }
+
+        .world-quote::before {
+            content: '「';
+            color: var(--gold);
+            opacity: 0.4;
+            margin-right: 6px;
+        }
+        .world-quote::after {
+            content: '」';
+            color: var(--gold);
+            opacity: 0.4;
+            margin-left: 6px;
+        }
+
+        .world-image-wrap {
+            cursor: pointer;
+            transition: all 0.4s ease;
+            position: relative;
+            display: inline-block;
+        }
+        .world-image-wrap:hover {
+            transform: scale(1.03);
+        }
+        .world-image-wrap:active {
+            transform: scale(0.98);
+        }
+
+        .world-item-img {
+            max-width: 320px;
+            max-height: 320px;
+            width: auto;
+            height: auto;
+            border-radius: 12px;
+            border: 2px solid var(--border-gold);
+            box-shadow: var(--shadow-gold), 0 8px 40px rgba(0, 0, 0, 0.3);
+            transition: all 0.4s ease;
+        }
+        .world-item-img:hover {
+            box-shadow: 0 0 60px rgba(201, 169, 110, 0.15), 0 8px 40px rgba(0, 0, 0, 0.4);
+        }
+
+        .world-item-placeholder {
+            width: 280px;
+            height: 280px;
+            border-radius: 12px;
+            background: radial-gradient(circle at 30% 30%, #3d3228, #1f1914);
+            border: 2px dashed var(--border-gold);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            color: var(--text-muted);
+            letter-spacing: 2px;
+            line-height: 1.8;
+        }
+
+        .world-name {
+            margin-top: 24px;
+            font-family: var(--font-display);
+            font-size: 26px;
+            color: var(--gold-light);
+            letter-spacing: 6px;
+            text-shadow: 0 0 30px rgba(201, 169, 110, 0.1);
+        }
+
+        .world-hint {
+            margin-top: 14px;
+            font-size: 12px;
+            color: var(--text-muted);
+            letter-spacing: 2px;
+            opacity: 0.45;
+            font-family: var(--font-display);
+        }
+
+        @keyframes worldQuoteFade {
+            0% { opacity: 0; transform: translateY(8px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        @media (max-width: 768px) {
+            .world-quote {
+                font-size: 15px;
+            }
+            .world-item-img {
+                max-width: 240px;
+                max-height: 240px;
+            }
+            .world-item-placeholder {
+                width: 200px;
+                height: 200px;
+            }
+            .world-name {
+                font-size: 20px;
+                letter-spacing: 4px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -1363,6 +1492,7 @@
             <div class="nav-divider">═══ ✦ ═══</div>
             <a href="#" data-view="glossary">📖 名词解释</a>
             <a href="#" data-view="mailbox">📬 角色信箱 <span class="mail-dot hidden" id="mailDot"></span></a>
+            <a href="#" data-view="world">🌍 世界</a>
         </nav>
 
         <div class="footer-meta">✦ 持续更新 · 作者原创 ✦</div>
@@ -1991,6 +2121,33 @@
             '屠龙请睁眼': []
         },
 
+        // ---- 👇 世界碎片（和 glossary 平级） ----
+        worldItems: [
+            {
+                id: 'grass',
+                name: '草',
+                img: 'images/世界/草.jpg',
+                quotes: [
+                    '哥哥世界都有',
+                    '布兰森踩过他',
+                    '很多人都踩过他',
+                    '平平无奇的草，有时候能救命'
+                ]
+            },
+            {
+                id: 'stone',
+                name: '石头',
+                img: 'images/世界/石头.jpg',
+                quotes: [
+                    '不太圆的石头',
+                    '建造塔楼的关键',
+                    '矮人的最爱',
+                    '用来打人很痛'
+                ]
+            }
+            // 以后添加更多东西，按这个格式继续加
+        ],
+
         // ---- 👇 生日数据（和 glossary 平级） ----
         birthdays: [
            {
@@ -2116,6 +2273,9 @@
                 break;
             case 'mailbox':
                 renderMailbox();
+                break;
+            case 'world':
+                renderWorld();
                 break;
             case 'search':
                 // 搜索由搜索框触发，不在此处理
@@ -2981,6 +3141,50 @@
         }
     }
 
+    // ---- 世界碎片 ----
+    function renderWorld() {
+        const items = DATA.worldItems || [];
+        if (items.length === 0) {
+            mainEl.innerHTML = '<p style="color:var(--text-muted); text-align:center; padding:60px 0;">暂无世界碎片，敬请期待……</p>';
+            return;
+        }
+
+        const item = items[Math.floor(Math.random() * items.length)];
+        let quoteIndex = -1;
+
+        let imageHtml;
+        if (item.img && item.img.trim() !== '') {
+            imageHtml = `<img src="${item.img}" alt="${item.name}" class="world-item-img" />`;
+        } else {
+            imageHtml = `<div class="world-item-placeholder">📦<br />图片待添加</div>`;
+        }
+
+        mainEl.innerHTML = `
+            <div class="world-page">
+                <div class="world-quote-box">
+                    <div class="world-quote" id="worldQuote">✦ 点击图片，聆听它的低语 ✦</div>
+                </div>
+                <div class="world-image-wrap" id="worldImageWrap">
+                    ${imageHtml}
+                </div>
+                <div class="world-name">${item.name}</div>
+                <div class="world-hint">✦ 点击图片切换语录 ✦</div>
+            </div>
+        `;
+
+        document.getElementById('worldImageWrap').addEventListener('click', () => {
+            quoteIndex++;
+            if (quoteIndex >= item.quotes.length) {
+                quoteIndex = 0;
+            }
+            const quoteEl = document.getElementById('worldQuote');
+            quoteEl.textContent = item.quotes[quoteIndex];
+            quoteEl.style.animation = 'none';
+            void quoteEl.offsetHeight;
+            quoteEl.style.animation = 'worldQuoteFade 0.5s ease-out';
+        });
+    }
+    
     // ---- 启动 ----
     render();
 </script>
