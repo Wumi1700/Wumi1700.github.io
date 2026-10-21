@@ -1510,16 +1510,18 @@
     // 📦 数据 —— 按板块分组
     // ================================================================
 
-<script src="data/01-synopsis.js"></script>
-<script src="data/02-characters.js"></script>
-<script src="data/03-glossary.js"></script>
-<script src="data/04-routes.js"></script>
-<script src="data/05-events.js"></script>
-<script src="data/06-world.js"></script>
-<script src="data/07-birthdays.js"></script>
-<script src="data/08-updates.js"></script>
+<!-- 这 8 个文件必须单独写，不能包在别的 <script> 里面 -->
+<script src="01-synopsis.js"></script>
+<script src="02-characters.js"></script>
+<script src="03-glossary.js"></script>
+<script src="04-routes.js"></script>
+<script src="05-events.js"></script>
+<script src="06-world.js"></script>
+<script src="07-birthdays.js"></script>
+<script src="08-updates.js"></script>
+
 <script>
-    // 把 8 个文件里的数据组装成原来的 DATA
+    // 组装数据
     const DATA = {
         synopsis: window.NOVEL_SYNOPSIS,
         characters: window.NOVEL_CHARACTERS,
@@ -1530,7 +1532,6 @@
         birthdays: window.NOVEL_BIRTHDAYS,
         updateLetters: window.NOVEL_UPDATES
     };
-</script>
 
     // 板块顺序（用于显示）
     const WORLD_ORDER = ['拯救世界', '造物之罪', '清醒梦', '机器人没有心脏', '屠龙请睁眼'];
