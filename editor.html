@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>小说内容编辑器</title>
+    <style>
+        :root {
+            --bg: #1a1510;
+            --panel: #241e18;
+            --text: #ddd6cd;
+            --gold: #c9a96e;
+            --gold-light: #e8d5a3;
+            --border: rgba(201, 169, 110, 0.25);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: system-ui, -apple-system, "Microsoft YaHei", sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            padding: 30px 20px;
+            line-height: 1.6;
+        }
+        .wrap { max-width: 760px; margin: 0 auto; }
+        h1 {
+            font-size: 22px;
+            color: var(--gold-light);
+            letter-spacing: 3px;
+            text-align: center;
+            margin-bottom: 6px;
+        }
+        .sub {
+            text-align: center;
+            color: #8a7e72;
+            font-size: 13px;
+            margin-bottom: 26px;
+        }
+        .panel {
+            background: var(--panel);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 22px;
+            margin-bottom: 20px;
+        }
+        .field { margin-bottom: 14px; display: none; }
+        .field.show { display: block; }
+        label {
+            display: block;
+            font-size: 13px;
+            color: var(--gold);
+            margin-bottom: 6px;
+        }
+        .hint { font-size: 11px; color: #6b6258; margin-left: 8px; }
+        input[type="text"], select, textarea {
+            width: 100%;
+            padding: 9px 12px;
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            color: var(--text);
+            font-family: inherit;
+            font-size: 14px;
+            outline: none;
+        }
+        input[type="text"]:focus, select:focus, textarea:focus { border-color: var(--gold); }
+        textarea {
+            min-height: 110px;
+            resize: vertical;
+            font-family: Consolas, "Courier New", monospace;
+            line-height: 1.7;
+        }
+        .row { display: flex; gap: 12px; }
+        .row > .field { flex: 1; }
+        .actions { display: flex; gap: 12px; margin-top: 18px; }
+        button {
+            flex: 1;
+            padding: 11px 16px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            background: rgba(201,169,110,0.1);
+            color: var(--gold-light);
+            font-family: inherit;
+            font-size: 14px;
+            letter-spacing: 2px;
+            cursor: pointer;
+            transition: all 0.25s;
+        }
+        button:hover { background: rgba(201,169,110,0.2); }
+        button.primary { background: var(--gold); color: var(--bg); font-weight: 600; }
+        button.primary:hover { background: var(--gold-light); }
+        .output {
+            background: #0e0d0c;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 14px;
+            font-family: Consolas, "Courier New", monospace;
+            font-size: 13px;
+            line-height: 1.7;
+            color: #b5d8b5;
+            white-space: pre-wrap;
+            word-break: break-all;
+            min-height: 120px;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        .output:empty::before {
+            content: '填好表单点「生成代码」，结果会出现在这里';
+            color: #4d4540;
+        }
+        .toast {
+            position: fixed; bottom: 30px; left: 50%;
+            transform: translateX(-50%) translateY(20px);
+            background: var(--gold); color: var(--bg);
+            padding: 10px 26px; border-radius: 30px;
+            font-size: 14px; opacity: 0; pointer-events: none;
+            transition: all 0.3s;
+        }
+        .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+        .tip {
+            font-size: 12px; color: #8a7e72;
+            background: rgba(201,169,110,0.06);
+            border-left: 3px solid var(--gold);
+            padding: 10px 14px; border-radius: 4px;
+            margin-top: 14px; line-height: 1.8;
+        }
+        code { color: var(--gold-light); }
+    </style>
+</head>
+<body>
+
+<div class="wrap">
+    <h1>📝 小说内容编辑器</h1>
+    <div class="sub">填表 → 生成代码 → 复制 → 粘贴进对应的 .js 文件</div>
+
+    <div class="panel">
+        <div class="field show">
+            <label>1. 要添加的类型</label>
+            <select id="type" onchange="updateFields()">
+                <option value="character">人物介绍 (02-characters.js)</option>
+                <option value="glossary">名词解释 (03-glossary.js)</option>
+                <option value="route">航线地图 (04-routes.js)</option>
+                <option value="region">航线里的地区 (04-routes.js)</option>
+                <option value="event">历史大事件 (05-events.js)</option>
+                <option value="world">世界物品 (06-world.js)</option>
+                <option value="birthday">生日信件 (07-birthdays.js)</option>
+                <option value="update">更新通知 (08-updates.js)</option>
+            </select>
+        </div>
+
+        <!-- 通用字段：ID -->
+        <div class="field show" id="f-id">
+            <label>唯一标识 ID <span class="hint">英文或拼音，不能重复，如 zhangsan</span></label>
+            <input type="text" id="id" placeholder="zhangsan" />
+        </div>
+
+        <!-- 名字 / 标题 -->
+        <div class="field show" id="f-name">
+            <label id="label-name">名字</label>
+            <input type="text" id="name" placeholder="张三" />
+        </div>
+
+        <!-- 副标题 / 头衔 -->
+        <div class="field" id="f-sub">
+            <label>副标题 / 头衔 <span class="hint">选填，显示在名字下方</span></label>
+            <input type="text" id="sub" placeholder="男 · 20岁 · 剑客" />
+        </div>
+
+        <!-- 图片 -->
+        <div class="field" id="f-img">
+            <label>图片路径 <span class="hint">选填，如 images/人物头像/张三.jpg</span></label>
+            <input type="text" id="img" placeholder="images/xxx/xxx.jpg" />
+        </div>
+
+        <!-- 介绍 / 正文 -->
+        <div class="field" id="f-desc">
+            <label id="label-desc">介绍内容 <span class="hint">支持 &lt;p&gt;分段，&lt;strong&gt;加粗</span></label>
+            <textarea id="desc" placeholder="<p><strong>人际关系：</strong></p><p>父亲：xxx</p>"></textarea>
+        </div>
+
+        <!-- 支线故事（地区专用） -->
+        <div class="field" id="f-story">
+            <label>支线故事 <span class="hint">选填</span></label>
+            <textarea id="story" placeholder="这个地区发生的支线故事……"></textarea>
+        </div>
+
+        <!-- 坐标（地区专用） -->
+        <div class="field" id="f-coord">
+            <div class="row">
+                <div class="field show" style="margin-bottom:0;">
+                    <label>X 坐标百分比</label>
+                    <input type="text" id="xPercent" placeholder="50" />
+                </div>
+                <div class="field show" style="margin-bottom:0;">
+                    <label>Y 坐标百分比</label>
+                    <input type="text" id="yPercent" placeholder="50" />
+                </div>
+            </div>
+        </div>
+
+        <!-- 日期（生日/更新专用） -->
+        <div class="field" id="f-date">
+            <label id="label-date">日期</label>
+            <input type="text" id="date" placeholder="10-02" />
+        </div>
+
+        <!-- 角色说的话（生日专用） -->
+        <div class="field" id="f-message">
+            <label>角色说的话 (生日信件正文)</label>
+            <textarea id="message" placeholder="今天是我的生日，谢谢你还记得……"></textarea>
+        </div>
+
+        <!-- 语录 / 金句（生日专用） -->
+        <div class="field" id="f-quote">
+            <label>末尾语录 / 签名 <span class="hint">选填</span></label>
+            <input type="text" id="quote" placeholder='"嘻嘻，蛋糕要配牛奶才好吃哦~"' />
+        </div>
+
+        <!-- 标题（更新通知专用） -->
+        <div class="field" id="f-title">
+            <label>通知标题</label>
+            <input type="text" id="title" placeholder="📖 新章节发布" />
+        </div>
+
+        <!-- 内容（更新通知专用） -->
+        <div class="field" id="f-content">
+            <label>通知内容</label>
+            <textarea id="content" placeholder="布兰森终于穿过了那扇门……"></textarea>
+        </div>
+
+        <!-- 多行语录（世界物品专用） -->
+        <div class="field" id="f-quotes">
+            <label>语录列表 <span class="hint">一行一条，系统会自动给你转成数组</span></label>
+            <textarea id="quotes" placeholder="哥哥世界都有&#10;布兰森踩过他&#10;很多人都踩过他"></textarea>
+        </div>
+
+        <div class="actions">
+            <button class="primary" onclick="generate()">生成代码</button>
+            <button onclick="copyCode()">复制结果</button>
+        </div>
+    </div>
+
+    <div class="panel">
+        <label>生成结果</label>
+        <div class="output" id="output"></div>
+        <div class="tip">
+            <strong>粘贴位置：</strong><br>
+            人物 → <code>02-characters.js</code> 对应板块数组末尾<br>
+            名词 → <code>03-glossary.js</code> 对应板块数组末尾<br>
+            航线 → <code>04-routes.js</code> 数组末尾<br>
+            地区 → <code>04-routes.js</code> 里对应航线的 <code>regions: []</code> 数组里<br>
+            事件 → <code>05-events.js</code> 数组末尾<br>
+            世界物品 → <code>06-world.js</code> 数组末尾<br>
+            生日 → <code>07-birthdays.js</code> 数组末尾<br>
+            更新通知 → <code>08-updates.js</code> 数组末尾<br>
+            <span style="color:#e74c3c;">⚠️ 粘贴时：它必须夹在 <code>[</code> 和 <code>]</code> 里面。前一个对象后面要有逗号，最后一个对象后面不要逗号。</span>
+        </div>
+    </div>
+</div>
+
+<div class="toast" id="toast">已复制</div>
+
+<script>
+    // 字段显隐配置
+    const FIELDS = {
+        character: ['id', 'name', 'sub', 'img', 'desc'],
+        glossary:  ['id', 'name', 'sub', 'img', 'desc'],
+        route:     ['id', 'name', 'sub', 'img', 'desc'],
+        region:    ['id', 'name', 'sub', 'coord', 'desc', 'story'],
+        event:     ['id', 'name', 'sub', 'img', 'desc'],
+        world:     ['id', 'name', 'img', 'quotes'],
+        birthday:  ['id', 'name', 'date', 'message', 'quote'],
+        update:    ['id', 'title', 'content', 'date']
+    };
+
+    const FIELD_DOM = {
+        id: 'f-id', name: 'f-name', sub: 'f-sub', img: 'f-img', 
+        desc: 'f-desc', story: 'f-story', coord: 'f-coord', 
+        date: 'f-date', message: 'f-message', quote: 'f-quote', 
+        title: 'f-title', content: 'f-content', quotes: 'f-quotes'
+    };
+
+    function updateFields() {
+        const type = document.getElementById('type').value;
+        const need = FIELDS[type] || [];
+
+        Object.values(FIELD_DOM).forEach(id => {
+            const el = document.getElementById(id);
+            if (el) el.classList.remove('show');
+        });
+
+        need.forEach(key => {
+            const el = document.getElementById(FIELD_DOM[key]);
+            if (el) el.classList.add('show');
+        });
+
+        const nameLabel = document.getElementById('label-name');
+        const descLabel = document.getElementById('label-desc');
+        const dateLabel = document.getElementById('label-date');
+
+        if (type === 'glossary') nameLabel.innerHTML = '词条名字 <span class="hint">显示在页面上的术语</span>';
+        else nameLabel.innerHTML = '名字 / 标题 <span class="hint">显示在页面上的名称</span>';
+
+        if (type === 'birthday') dateLabel.innerHTML = '生日日期 <span class="hint">格式 MM-DD，如 10-02</span>';
+        else dateLabel.innerHTML = '日期 <span class="hint">格式 YYYY-MM-DD，如 2026-10-02</span>';
+
+        if (type === 'world') {
+            descLabel.style.display = 'none';
+        } else {
+            descLabel.style.display = 'block';
+        }
+    }
+
+    function val(id) {
+        const el = document.getElementById(id);
+        return el ? el.value.trim() : '';
+    }
+
+    // 字符串转义
+    function q(str) {
+        if (!str) return "''";
+        return JSON.stringify(str);
+    }
+
+    function generate() {
+        const type = document.getElementById('type').value;
+        const id = val('id');
+
+        if (!id) { alert('请填写唯一标识 ID！'); return; }
+
+        const lines = [];
+
+        if (type === 'character') {
+            lines.push(`        {
+            id: ${q(id)},
+            name: ${q(val('name'))},
+            meta: ${q(val('sub'))},
+            img: ${q(val('img'))},
+            desc: \`${val('desc')}\`
+        }`);
+        }
+        else if (type === 'glossary') {
+            lines.push(`        {
+            id: ${q(id)},
+            term: ${q(val('name'))},
+            sub: ${q(val('sub'))},
+            img: ${q(val('img'))},
+            desc: \`${val('desc')}\`
+        }`);
+        }
+        else if (type === 'route') {
+            lines.push(`    {
+        id: ${q(id)},
+        name: ${q(val('name'))},
+        sub: ${q(val('sub'))},
+        desc: ${q(val('desc'))},
+        mapImage: ${q(val('img'))},
+        regions: []
+    }`);
+        }
+        else if (type === 'region') {
+            lines.push(`            {
+                id: ${q(id)},
+                name: ${q(val('name'))},
+                sub: ${q(val('sub'))},
+                xPercent: ${val('xPercent') || 50},
+                yPercent: ${val('yPercent') || 50},
+                desc: \`${val('desc')}\`,
+                story: \`${val('story')}\`
+            }`);
+        }
+        else if (type === 'event') {
+            lines.push(`    {
+        id: ${q(id)},
+        name: ${q(val('name'))},
+        sub: ${q(val('sub'))},
+        img: ${q(val('img'))},
+        desc: \`${val('desc')}\`
+    }`);
+        }
+        else if (type === 'world') {
+            const quotesArr = val('quotes').split('\n').map(s => s.trim()).filter(Boolean);
+            const quoteLines = quotesArr.map(s => `            ${q(s)}`).join(',\n');
+            lines.push(`    {
+        id: ${q(id)},
+        name: ${q(val('name'))},
+        img: ${q(val('img'))},
+        quotes: [
+${quoteLines}
+        ]
+    }`);
+        }
+        else if (type === 'birthday') {
+            lines.push(`    {
+        id: ${q(id)},
+        name: ${q(val('name'))},
+        date: ${q(val('date'))},
+        message: \`${val('message')}\`,
+        quote: ${q(val('quote'))}
+    }`);
+        }
+        else if (type === 'update') {
+            lines.push(`    {
+        id: ${q(id)},
+        title: ${q(val('title'))},
+        content: \`${val('content')}\`,
+        date: ${q(val('date'))}
+    }`);
+        }
+
+        document.getElementById('output').textContent = lines.join('\n');
+    }
+
+    function copyCode() {
+        const text = document.getElementById('output').textContent;
+        if (!text) { alert('还没有生成代码！'); return; }
+        
+        navigator.clipboard.writeText(text).then(() => {
+            const t = document.getElementById('toast');
+            t.classList.add('show');
+            setTimeout(() => t.classList.remove('show'), 1500);
+        }).catch(() => {
+            alert('复制失败，请手动选中复制');
+        });
+    }
+
+    // 初始化
+    updateFields();
+</script>
+
+</body>
+</html>
