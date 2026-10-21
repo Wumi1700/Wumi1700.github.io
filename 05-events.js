@@ -1,0 +1,3 @@
+window.NOVEL_EVENTS = [
+
+];
