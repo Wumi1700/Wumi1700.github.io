@@ -180,20 +180,21 @@ window.NOVEL_ROUTES = [{
                 story: '【下城支线故事待补充】'
             }]
         }, {
-            id: 'route246',           // 唯一标识，英文/拼音，如 'route-666'
-            name: '246号航线',          // 航线名称
-            sub: '规则世界',              // 如 '现实世界'、'魔法世界'
-            desc: '副本游戏和规则怪谈堆砌出来的世界',   // 一句话简介
-            mapImage: 'images/航线地图/246.jpg',   // 地图图片路径，没有就留空 ''
+            id: 'route246',
+            name: '246号航线',
+            sub: '规则世界',
+            desc: '副本游戏和规则怪谈堆砌出来的世界',
+            mapImage: 'images/航线地图/246.jpg',
             regions: [
-                  {
-                         id: 'region-xxx',          // 唯一标识，如 'greenwood'
-                         name: '地区名称',           // 显示在地图上的名字
-                         sub: '副标题/种族',         // 如 '绿地精灵的居住地'
-                         xPercent: 50,              // 地图上的 X 坐标百分比（0~100）
-                         yPercent: 50,              // 地图上的 Y 坐标百分比（0~100）
-                         desc: '地区的详细介绍……',
-                         story: '这个地区的支线故事……'   // 可选
-                  }, 
-
-];
+                {
+                    id: 'region-xxx',
+                    name: '地区名称',
+                    sub: '副标题/种族',
+                    xPercent: 50,
+                    yPercent: 50,
+                    desc: '地区的详细介绍……',
+                    story: '这个地区的支线故事……'
+                } 
+            ]   
+        }      
+    ];
