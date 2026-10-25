@@ -26,5 +26,19 @@ window.NOVEL_BIRTHDAYS = [
         date: "05-07",
         message: '友人：福灵赐予我们生命……书面话我就不多说了，今天是我的生日，你能来参加吗？我会准备好礼物的',
         quote: '"The Fuling hath given us life, not that we should rot away in ease, but that in tribulation we should endure as good soldiers.  --The Book of Fuling(Chapter Four: On the Gun Chamber)'"
+    },
+    {
+        id: "moni",
+        name: "红叶",
+        date: "12-12",
+        message: '亲爱的宝贝：今天是我的生日哦，快来吧~',
+        quote: '"I am waiting for you~"'
+    },
+    {
+        id: "elr",
+        name: "艾尔兰斯",
+        date: "05-01",
+        message: '朋友：生日，来吃',
+        quote: "'come.'"
     }
 ];
