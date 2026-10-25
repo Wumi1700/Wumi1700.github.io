@@ -23,7 +23,7 @@ window.NOVEL_BIRTHDAYS = [
     {
         id: "floyd",
         name: "弗洛伊德·汤姆",
-        date: "05-07",
+        date: "10-25",
         message: '友人：福灵赐予我们生命……书面话我就不多说了，今天是我的生日，你能来参加吗？我会准备好礼物的',
         quote: '"The Fuling hath given us life, not that we should rot away in ease, but that in tribulation we should endure as good soldiers.  --The Book of Fuling(Chapter Four: On the Gun Chamber)"'
     },
