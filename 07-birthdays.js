@@ -18,14 +18,14 @@ window.NOVEL_BIRTHDAYS = [
         name: "布兰森·丹尼尔",
         date: "10-02",
         message: '好朋友：那个……今天是我的生日，你可不可以过来……',
-        quote: '"Please do come over, I bought delicious cake!'"
+        quote: '"Please do come over, I bought delicious cake!"'
     },
     {
         id: "floyd",
         name: "弗洛伊德·汤姆",
         date: "05-07",
         message: '友人：福灵赐予我们生命……书面话我就不多说了，今天是我的生日，你能来参加吗？我会准备好礼物的',
-        quote: '"The Fuling hath given us life, not that we should rot away in ease, but that in tribulation we should endure as good soldiers.  --The Book of Fuling(Chapter Four: On the Gun Chamber)'"
+        quote: '"The Fuling hath given us life, not that we should rot away in ease, but that in tribulation we should endure as good soldiers.  --The Book of Fuling(Chapter Four: On the Gun Chamber)"'
     },
     {
         id: "moni",
@@ -39,6 +39,34 @@ window.NOVEL_BIRTHDAYS = [
         name: "艾尔兰斯",
         date: "05-01",
         message: '朋友：生日，来吃',
-        quote: "'come.'"
+        quote: '"come."'
+    },
+    {
+        id: "nies",
+        name: "欧辛·罗斯伍德",
+        date: "04-01",
+        message: '亲爱的朋友：听说生日的时候会触发规则蛋糕，期待哦~',
+        quote: '"Excited for it!"'
+    },
+    {
+        id: "sammie",
+        name: "塞缪尔·杰森",
+        date: "07-09",
+        message: '朋友朋友好朋友：今天我生日，蛋糕蛋糕！！！派对派对！！！',
+        quote: '"PARTY!!!!"'
+    },
+    {
+        id: "liber",
+        name: "丽波缇·罗斯",
+        date: "03-22",
+        message: '亲爱的：今天是我生日，想来吗？那就准备好礼物，便宜的我不要',
+        quote: '"Just kidding, I’ll have a gift ready for you."'
+    },
+    {
+        id: "socrates",
+        name: "苏格拉底",
+        date: "04-05",
+        message: '朋友：你好，今天是我的生日，如果你能来，我会很高兴',
+        quote: '"I’ve prepared a gift."'
     }
 ];
