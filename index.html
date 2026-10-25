@@ -1520,16 +1520,16 @@
 <script src="08-updates.js"></script>
 
 <script>
-    // 组装数据
+    // 组装数据（增加了 || {} 和 || [] 兜底，防止某个 js 加载失败导致网页白屏）
     const DATA = {
-        synopsis: window.NOVEL_SYNOPSIS,
-        characters: window.NOVEL_CHARACTERS,
-        glossary: window.NOVEL_GLOSSARY,
-        routes: window.NOVEL_ROUTES,
-        events: window.NOVEL_EVENTS,
-        worldItems: window.NOVEL_WORLDITEMS,
-        birthdays: window.NOVEL_BIRTHDAYS,
-        updateLetters: window.NOVEL_UPDATES
+        synopsis: window.NOVEL_SYNOPSIS || {},
+        characters: window.NOVEL_CHARACTERS || {},
+        glossary: window.NOVEL_GLOSSARY || {},
+        routes: window.NOVEL_ROUTES || [],
+        events: window.NOVEL_EVENTS || [],
+        worldItems: window.NOVEL_WORLDITEMS || [],
+        birthdays: window.NOVEL_BIRTHDAYS || [],
+        updateLetters: window.NOVEL_UPDATES || []
     };
 
     // 板块顺序（用于显示）
@@ -1637,12 +1637,8 @@
         }
 
         mainEl.scrollTop = 0;
-
-        // 检查生日（只在页面加载时检查）
-        if (!window._birthdayChecked) {
-            checkBirthdays();
-            window._birthdayChecked = true;
-        }
+        
+        // 【注：此处已将 checkBirthdays() 移出，只在底部启动时调用一次】
     }
 
     // ---- 故事梗概 ----
@@ -1661,10 +1657,10 @@
             <div class="page-synopsis" id="synopsisPage">
                 <div class="veil"></div>
                 <div class="stardust">${stars}</div>
-                <div class="book-title">${s.title}</div>
-                <div class="book-sub">${s.subtitle}</div>
+                <div class="book-title">${s.title || ''}</div>
+                <div class="book-sub">${s.subtitle || ''}</div>
                 <div class="book-divider"></div>
-                <div class="synopsis-text">${s.text}</div>
+                <div class="synopsis-text">${s.text || ''}</div>
             </div>
         `;
     }
@@ -2378,7 +2374,7 @@
         });
     }
 
-    // ---- 检查生日 ----
+    // ---- 修复后的检查生日功能（支持同一天多个角色） ----
     function checkBirthdays() {
         const today = new Date();
         const month = String(today.getMonth() + 1).padStart(2, '0');
@@ -2386,29 +2382,39 @@
         const todayStr = `${month}-${day}`;
 
         const birthdays = DATA.birthdays || [];
-        const matched = birthdays.find(b => b.date === todayStr);
-        if (!matched) return;
+        // 改用 filter，把所有今天过生日的角色都找出来
+        const matchedList = birthdays.filter(b => b.date === todayStr);
+        if (matchedList.length === 0) return;
 
-        const todayKey = `birthday_${todayStr}`;
-        if (sessionStorage.getItem(todayKey)) return;
+        // 遍历所有今天生日的角色
+        matchedList.forEach((matched, index) => {
+            const mailId = `birthday_${matched.id}_${todayStr}`;
+            const mails = getMails();
+            
+            // 1. 如果信箱里没有这封信，就加进去
+            if (!mails.find(m => m.id === mailId)) {
+                addMail({
+                    id: mailId,
+                    name: matched.name,
+                    title: `🎂 来自 ${matched.name} 的生日信`,
+                    date: `${today.getFullYear()}-${todayStr}`,
+                    message: matched.message,
+                    quote: matched.quote || '',
+                    read: false,
+                    starred: false
+                });
+            }
 
-        const mailId = `birthday_${matched.id}_${todayStr}`;
-        const mails = getMails();
-        if (!mails.find(m => m.id === mailId)) {
-            addMail({
-                id: mailId,
-                name: matched.name,
-                title: `🎂 来自 ${matched.name} 的生日信`,
-                date: `${today.getFullYear()}-${todayStr}`,
-                message: matched.message,
-                quote: matched.quote || '',
-                read: false,
-                starred: false
-            });
-        }
-
-        showBirthdayCard(matched);
-        sessionStorage.setItem(todayKey, 'true');
+            // 2. 弹窗逻辑（使用独立的 sessionKey，防止互相覆盖）
+            const sessionKey = `birthday_shown_${mailId}`;
+            if (!sessionStorage.getItem(sessionKey)) {
+                // 延迟展示，如果同一天有两个人，错开 1.5 秒展示，防止覆盖
+                setTimeout(() => {
+                    showBirthdayCard(matched);
+                }, index * 1500); 
+                sessionStorage.setItem(sessionKey, 'true');
+            }
+        });
     }
 
     function showBirthdayCard(data) {
@@ -2539,6 +2545,7 @@
     
     // ---- 启动 ----
     render();
+    checkBirthdays(); // 页面加载完成后，静默检查一次今天是否有生日信件
 </script>
 
 <!-- ===== 背景音乐控制 ===== -->
