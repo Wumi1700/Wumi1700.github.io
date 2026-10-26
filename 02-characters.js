@@ -4,7 +4,7 @@ window.NOVEL_CHARACTERS = {
                     id: 'daniel',
                     name: '布兰森·丹尼尔',
                     meta: '男 · 18岁 · 迪雅人（普通人类）',
-                    img: '/images/人物头像/布兰森.jpg',
+                    img: '/images/characters/branson.jpg',
                     desc: `
                         <p><strong>人际关系：</strong></p>
                         <p>父亲：杰弗瑞·汤姆  母亲：蕾丽莎·丹尼尔</p>
@@ -43,7 +43,7 @@ window.NOVEL_CHARACTERS = {
                     id: 'ailans',
                     name: '艾尔兰斯',
                     meta: '男 · 18岁 · 精灵',
-                    img: '/images/人物头像/艾尔兰斯.png',
+                    img: '/images/charcters/elr.png',
                     desc: `
                         <p><strong>人际关系：</strong></p>
                         <p>父亲：格林  母亲：莎莉</p>
@@ -85,7 +85,7 @@ window.NOVEL_CHARACTERS = {
                 <p>二十七岁米西娅死了；</p>
                 <p>三十岁重新开始祈福的旅程，为流离失所的家园寻求希望；</p>
                 <p>三十五岁战争结束，<strong>以失败告终</strong>；</p>
-                <p>三十七岁遇见<em>布兰森</em>，踏上救世之旅。</p>
+                <p>三十七岁遇见<em>布兰森·丹尼尔</em>，踏上救世之旅。</p>
                 <p><strong>饮食：</strong></p>
                 <p>常年在外对饮食的需求不高，能熟就能吃；</p>
                 <p>吃不惯甜食</p>
@@ -108,7 +108,7 @@ window.NOVEL_CHARACTERS = {
                     id: 'monica',
                     name: '红叶',
                     meta: '女 · 23岁 · 智力超群的少女',
-                    img: '/images/人物头像/红叶.jpg',
+                    img: '/images/characters/red.jpg',
                     desc: `
                         <p><strong>人际关系：</strong></p>
                         <p>父亲：xxx  母亲：xxx</p>
@@ -128,7 +128,7 @@ window.NOVEL_CHARACTERS = {
                     id: 'lindrick',
                     name: '林德里克·罗斯福',
                     meta: '男 · 未知 · 狡猾的狐狸',
-                    img: '/images/人物头像/林德里克.jpg',
+                    img: '/images/characters/lind.jpg',
                     desc: `
                         <p><strong>人际关系：</strong></p>
                         <p>父亲：xxx  母亲：xxx</p>
