@@ -10,7 +10,7 @@ window.NOVEL_ROUTES = [{
             name: '417号航线',
             sub: '基塔世界',
             desc: '一个融合了其他世界的奇异世界。精灵、兽人、迪雅人、暗影生物共存。',
-            mapImage: '/images/航线地图/417号航线.jpg',
+            mapImage: '/images/maps/417.jpg',
             regions: [{
                 id: 'greenwood',
                 name: '绿林',
@@ -89,7 +89,7 @@ window.NOVEL_ROUTES = [{
             name: '240号航线',          // 航线名称
             sub: '混乱世界',              // 如 '现实世界'、'魔法世界'
             desc: '这个世界的法律好像很混乱',   // 一句话简介
-            mapImage: '/images/航线地图/240.jpg',   // 地图图片路径，没有就留空 ''
+            mapImage: '/images/maps/240.jpg',   // 地图图片路径，没有就留空 ''
             regions: [{
                 id: 'central-court',
                 name: '中央法院',
