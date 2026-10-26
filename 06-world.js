@@ -2,7 +2,7 @@ window.NOVEL_WORLDITEMS = [
             {
                 id: 'grass',
                 name: '草',
-                img: '/images/世界/草.png',
+                img: '/images/world/grass.png',
                 quotes: [
                     '各个世界都有',
                     '布兰森踩过他',
@@ -13,7 +13,7 @@ window.NOVEL_WORLDITEMS = [
             {
                 id: 'stone',
                 name: '石头',
-                img: '/images/世界/石头.png',
+                img: '/images/world/stone.png',
                 quotes: [
                     '不太圆的石头',
                     '建造塔楼的关键',
